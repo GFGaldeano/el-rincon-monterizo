@@ -9,32 +9,37 @@ El Rincón Monterizo is a web platform for on-demand educational, cultural, and 
 The initial version of the product is intended to be:
 - free for end users
 - financed through local advertising and sponsor placements
-- focused on simplicity, clarity, and community value
+- focused on clarity, usability, and community value
+- built with a modular architecture prepared for future growth
 
 ## Main Goals
 - provide access to educational and cultural content
 - organize digital resources clearly
-- support on-demand video and digital documents
+- support on-demand videos and digital documents
 - create a clean space for local sponsors and advertisers
-- keep the architecture scalable without unnecessary complexity
+- maintain a scalable codebase without unnecessary complexity
 
-## Product Scope (Current)
-The project currently focuses on:
-- public content browsing
-- digital books and documents
-- on-demand videos
-- content categories
-- sponsor and advertiser placements
-- future admin management
+## Current Product Scope
+The project currently includes:
+- public homepage
+- base application layout
+- navigation structure
+- public browsing sections
+- mock content catalog
+- mock sponsors module
+- dynamic content detail pages
+- differentiated detail experience by content type
+- custom not-found page
 
 ## Out of Scope for Current MVP
 The following are not part of the current MVP unless explicitly approved:
 - live streaming
 - subscription-first monetization
-- social network features
 - chat systems
+- social network features
 - AI recommendation engines
-- complex marketplace logic
+- marketplace logic
+- complex admin workflows in this current phase
 
 ## High-Level Technical Structure
 
@@ -43,6 +48,7 @@ The following are not part of the current MVP unless explicitly approved:
 - React
 - TypeScript
 - Tailwind CSS
+- shadcn/ui
 
 ### Planned Backend / Data Layer
 - Supabase
@@ -54,15 +60,42 @@ The following are not part of the current MVP unless explicitly approved:
 ### Planned Deployment
 - Vercel
 
-## Folder Structure
+## Current Folder Structure
 
 ```text
 src/
-  app/         routes, pages, layouts
-  components/  shared reusable UI
-  features/    feature-specific modules
-  lib/         utilities and helpers
-  services/    external integrations and service access
-  hooks/       custom hooks
-  types/       shared TypeScript types
-  constants/   project constants
+  app/
+    biblioteca/
+    contenido/
+      [id]/
+    cultura/
+    sponsors/
+    videos/
+    layout.tsx
+    not-found.tsx
+    page.tsx
+  components/
+    layout/
+    ui/
+  constants/
+  features/
+    content/
+      components/
+        detail/
+      data/
+      types/
+    sponsors/
+      components/
+      data/
+      types/
+  hooks/
+  lib/
+  services/
+  types/
+docs/
+  architecture.md
+  coding-standards.md
+  product-rules.md
+  roadmap.md
+  skills/
+    project-development.md
