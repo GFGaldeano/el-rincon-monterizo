@@ -13,6 +13,24 @@ The current MVP needs to support:
 
 ---
 
+## Current Implementation Status
+
+### Content
+The `content` entity is already in active use through Supabase for:
+- homepage featured content
+- biblioteca page
+- test page for database validation
+
+The detail page currently uses a hybrid strategy:
+- database content first
+- mock fallback when the record is not yet migrated
+
+### Sponsors
+The `sponsors` entity is already designed in SQL, but the frontend still consumes mock sponsor data.
+This part has not yet been migrated to live database reads.
+
+---
+
 ## Core Principles
 - keep the schema simple
 - avoid premature complexity
@@ -48,6 +66,13 @@ Important fields:
 - is_featured
 - is_published
 - published_at
+- display_order
+
+### Current usage in frontend
+- featured homepage content
+- biblioteca content listing
+- dynamic content detail
+- related content section
 
 ---
 
@@ -74,6 +99,12 @@ Important fields:
 - display_order
 - start_date
 - end_date
+
+### Current usage in frontend
+- sponsors page
+- featured sponsors section on homepage
+
+At this stage, sponsors are still using mock data in the application layer.
 
 ---
 
@@ -116,6 +147,19 @@ It also keeps the migration path simple:
 - replace mock arrays with database queries
 - keep the UI structure
 - introduce admin flows later
+
+---
+
+## Current Migration Strategy
+The project is intentionally using a phased migration approach:
+
+1. define schema first
+2. validate Supabase connection
+3. migrate content reads gradually
+4. keep fallback mock data temporarily
+5. migrate sponsors later
+
+This reduces risk and keeps the public UI stable while backend integration advances.
 
 ---
 

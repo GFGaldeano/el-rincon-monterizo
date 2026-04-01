@@ -25,11 +25,12 @@ The project currently includes:
 - base application layout
 - navigation structure
 - public browsing sections
-- mock content catalog
 - mock sponsors module
 - dynamic content detail pages
 - differentiated detail experience by content type
 - custom not-found page
+- Supabase integration for content reads
+- hybrid data strategy during migration from mock data to database
 
 ## Out of Scope for Current MVP
 The following are not part of the current MVP unless explicitly approved:
@@ -50,7 +51,7 @@ The following are not part of the current MVP unless explicitly approved:
 - Tailwind CSS
 - shadcn/ui
 
-### Planned Backend / Data Layer
+### Backend / Data Layer
 - Supabase
 - PostgreSQL
 
@@ -70,6 +71,7 @@ src/
       [id]/
     cultura/
     sponsors/
+    test-supabase/
     videos/
     layout.tsx
     not-found.tsx
@@ -90,12 +92,18 @@ src/
       types/
   hooks/
   lib/
+    supabase/
+    env.ts
   services/
+    content.server.ts
   types/
 docs/
   architecture.md
   coding-standards.md
+  data-model.md
   product-rules.md
   roadmap.md
   skills/
     project-development.md
+database/
+  schema.sql

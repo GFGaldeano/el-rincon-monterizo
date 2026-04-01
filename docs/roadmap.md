@@ -1,4 +1,6 @@
 
+---
+
 ## `docs/roadmap.md`
 
 ```md
@@ -58,30 +60,53 @@
 ## Phase 6 - Documentation Alignment
 - [x] align architecture doc with implemented modules
 - [x] align roadmap with actual progress
+- [x] add initial data model documentation
+- [x] add initial SQL schema for MVP
 
-## Phase 7 - Backend Preparation
-- [ ] define final data entities
-- [ ] design database structure
-- [ ] prepare Supabase integration
-- [ ] define storage strategy
-- [ ] define initial admin data flows
-- [ ] replace mock content with real data source
-- [ ] replace mock sponsors with real data source
+## Phase 7 - Supabase Preparation
+- [x] create Supabase project
+- [x] configure environment variables
+- [x] create env helper
+- [x] create browser Supabase client
+- [x] create server Supabase client
+- [x] create initial content read policy
+- [x] insert first real content records
+- [x] validate database reads with `/test-supabase`
 
-## Phase 8 - Admin and Content Management
+## Phase 8 - Partial Content Migration to Supabase
+- [x] create server content service layer
+- [x] migrate biblioteca to Supabase
+- [x] migrate homepage featured content to Supabase
+- [x] support hybrid content detail resolution (DB first, mock fallback)
+
+## Phase 9 - Pending Content Migration
+- [ ] migrate `/videos` to Supabase
+- [ ] migrate content detail fully to database-backed records
+- [ ] stop depending on mock content data in public pages
+- [ ] add more real content records in Supabase
+- [ ] define slug-based detail strategy if needed
+
+## Phase 10 - Sponsors Data Migration
+- [ ] define sponsor table policies
+- [ ] insert real sponsors in Supabase
+- [ ] create sponsor service layer
+- [ ] migrate `/sponsors` from mock data to Supabase
+- [ ] migrate featured sponsors on homepage to Supabase
+
+## Phase 11 - Admin and Content Management
 - [ ] define admin access strategy
 - [ ] design content creation/editing flow
 - [ ] design sponsor management flow
 - [ ] define publication workflow
 
-## Phase 9 - Media and Experience
+## Phase 12 - Media and Experience
 - [ ] define real video detail experience
 - [ ] define real library/document reading experience
 - [ ] define culture/editorial reading experience
 - [ ] prepare media integration with Mux
 - [ ] define content detail actions with real behavior
 
-## Phase 10 - Production Readiness
+## Phase 13 - Production Readiness
 - [ ] SEO basics
 - [ ] performance review
 - [ ] deployment configuration
