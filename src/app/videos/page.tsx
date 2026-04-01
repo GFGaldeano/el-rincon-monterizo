@@ -2,10 +2,16 @@ import { Container } from "@/components/layout/Container";
 import { Badge } from "@/components/ui/badge";
 import { ContentCard } from "@/features/content/components/ContentCard";
 import { contentItems } from "@/features/content/data/content.data";
+import { getPublishedVideoContent } from "@/services/content.server";
 
-const videoItems = contentItems.filter((item) => item.category === "video");
+export default async function VideosPage() {
+  const { data: videoItemsFromDb, error } = await getPublishedVideoContent();
 
-export default function VideosPage() {
+  const fallbackVideoItems = contentItems.filter((item) => item.category === "video");
+
+  const videoItems =
+    videoItemsFromDb.length > 0 ? videoItemsFromDb : fallbackVideoItems;
+
   return (
     <section className="py-16">
       <Container>
@@ -14,15 +20,28 @@ export default function VideosPage() {
         </Badge>
 
         <h1 className="mt-4 text-4xl font-bold text-white">Videos</h1>
+
         <p className="mt-4 max-w-2xl text-zinc-400">
           Contenido audiovisual pensado para aprender y descubrir a demanda.
         </p>
 
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
-          {videoItems.map((item) => (
-            <ContentCard key={item.id} item={item} />
-          ))}
-        </div>
+        {error ? (
+          <div className="mt-8 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-200">
+            No se pudieron cargar los videos desde Supabase: {error}
+          </div>
+        ) : null}
+
+        {videoItems.length > 0 ? (
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {videoItems.map((item) => (
+              <ContentCard key={item.id} item={item} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-10 rounded-2xl border border-white/10 bg-zinc-900/60 p-6 text-zinc-400">
+            Aún no hay videos publicados.
+          </div>
+        )}
       </Container>
     </section>
   );

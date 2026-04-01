@@ -11,8 +11,6 @@ import { LibraryDetailPanel } from "@/features/content/components/detail/Library
 import { VideoDetailPanel } from "@/features/content/components/detail/VideoDetailPanel";
 import type { ContentItem } from "@/features/content/types/content";
 import {
-  getMockContentById,
-  getMockRelatedContent,
   getPublishedContentById,
   getRelatedPublishedContent,
 } from "@/services/content.server";
@@ -42,21 +40,11 @@ function renderDetailPanel(item: ContentItem) {
   return <LibraryDetailPanel item={item} />;
 }
 
-async function resolveContentById(id: string): Promise<ContentItem | null> {
-  const dbItem = await getPublishedContentById(id);
-
-  if (dbItem) {
-    return dbItem;
-  }
-
-  return getMockContentById(id);
-}
-
 export async function generateMetadata({
   params,
 }: ContentDetailPageProps): Promise<Metadata> {
   const { id } = await params;
-  const item = await resolveContentById(id);
+  const item = await getPublishedContentById(id);
 
   if (!item) {
     return {
@@ -75,16 +63,13 @@ export default async function ContentDetailPage({
 }: ContentDetailPageProps) {
   const { id } = await params;
 
-  const dbItem = await getPublishedContentById(id);
-  const item = dbItem ?? getMockContentById(id);
+  const item = await getPublishedContentById(id);
 
   if (!item) {
     notFound();
   }
 
-  const relatedItems = dbItem
-    ? await getRelatedPublishedContent(item.category, item.id)
-    : getMockRelatedContent(item.category, item.id);
+  const relatedItems = await getRelatedPublishedContent(item.category, item.id);
 
   return (
     <section className="py-16">
