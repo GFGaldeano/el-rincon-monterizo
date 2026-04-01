@@ -1,16 +1,10 @@
 import { Container } from "@/components/layout/Container";
 import { Badge } from "@/components/ui/badge";
 import { ContentCard } from "@/features/content/components/ContentCard";
-import { contentItems } from "@/features/content/data/content.data";
 import { getPublishedVideoContent } from "@/services/content.server";
 
 export default async function VideosPage() {
-  const { data: videoItemsFromDb, error } = await getPublishedVideoContent();
-
-  const fallbackVideoItems = contentItems.filter((item) => item.category === "video");
-
-  const videoItems =
-    videoItemsFromDb.length > 0 ? videoItemsFromDb : fallbackVideoItems;
+  const { data: videoItems, error } = await getPublishedVideoContent();
 
   return (
     <section className="py-16">

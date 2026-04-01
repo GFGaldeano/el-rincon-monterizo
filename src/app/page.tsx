@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ContentCard } from "@/features/content/components/ContentCard";
-import { contentItems } from "@/features/content/data/content.data";
 import { SponsorCard } from "@/features/sponsors/components/SponsorCard";
 import { sponsorItems } from "@/features/sponsors/data/sponsors.data";
 import { getFeaturedPublishedContent } from "@/services/content.server";
@@ -18,12 +17,7 @@ const sponsorHighlights = [
 const featuredSponsors = sponsorItems.filter((item) => item.featured).slice(0, 3);
 
 export default async function Home() {
-  const { data: featuredContentFromDb, error } = await getFeaturedPublishedContent(3);
-
-  const featuredContent =
-    featuredContentFromDb.length > 0
-      ? featuredContentFromDb
-      : contentItems.filter((item) => item.featured).slice(0, 3);
+  const { data: featuredContent, error } = await getFeaturedPublishedContent(3);
 
   return (
     <div className="bg-zinc-950">
@@ -89,11 +83,17 @@ export default async function Home() {
             </div>
           ) : null}
 
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
-            {featuredContent.map((item) => (
-              <ContentCard key={item.id} item={item} />
-            ))}
-          </div>
+          {featuredContent.length > 0 ? (
+            <div className="mt-10 grid gap-6 md:grid-cols-3">
+              {featuredContent.map((item) => (
+                <ContentCard key={item.id} item={item} />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-10 rounded-2xl border border-white/10 bg-zinc-900/60 p-6 text-zinc-400">
+              Aún no hay contenido destacado publicado.
+            </div>
+          )}
         </Container>
       </section>
 
