@@ -1,6 +1,6 @@
 import "server-only";
 
-import { contentItems as mockContentItems } from "@/features/content/data/content.data";
+
 import type {
   ContentCategory,
   ContentItem,
@@ -177,19 +177,6 @@ export async function getRelatedPublishedContent(
   return ((data ?? []) as ContentRecord[]).map(mapContentRecord);
 }
 
-export function getMockContentById(id: string): ContentItem | null {
-  return mockContentItems.find((item) => item.id === id) ?? null;
-}
-
-export function getMockRelatedContent(
-  category: ContentCategory,
-  excludeId: string,
-  limit = 3
-): ContentItem[] {
-  return mockContentItems
-    .filter((item) => item.category === category && item.id !== excludeId)
-    .slice(0, limit);
-}
 
 export async function getFeaturedPublishedContent(limit = 3): Promise<{
   data: ContentItem[];
