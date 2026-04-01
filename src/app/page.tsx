@@ -3,30 +3,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-
-const featuredCategories = [
-  {
-    title: "Biblioteca digital",
-    description:
-      "Libros, documentos, apuntes y materiales educativos organizados para consulta on-demand.",
-  },
-  {
-    title: "Videos y cursos",
-    description:
-      "Contenido audiovisual pensado para aprender, descubrir y acceder a recursos valiosos en cualquier momento.",
-  },
-  {
-    title: "Cultura y comunidad",
-    description:
-      "Espacios para visibilizar identidad local, contenidos culturales y propuestas con valor regional.",
-  },
-];
+import { ContentCard } from "@/features/content/components/ContentCard";
+import { contentItems } from "@/features/content/data/content.data";
 
 const sponsorHighlights = [
   "Espacios publicitarios integrados con diseño limpio",
   "Sponsors locales con presencia destacada",
   "Modelo gratuito para usuarios en etapa inicial",
 ];
+
+const featuredContent = contentItems.filter((item) => item.featured);
 
 export default function Home() {
   return (
@@ -80,26 +66,16 @@ export default function Home() {
         <Container>
           <div className="max-w-2xl">
             <Badge className="bg-amber-400/15 text-amber-300 hover:bg-amber-400/15">
-              Qué ofrecerá la plataforma
+              Contenido destacado
             </Badge>
             <h2 className="mt-4 text-3xl font-bold text-white md:text-4xl">
-              Contenido organizado para aprender, descubrir y conectar
+              Primeros recursos y materiales de la plataforma
             </h2>
           </div>
 
           <div className="mt-10 grid gap-6 md:grid-cols-3">
-            {featuredCategories.map((category) => (
-              <Card
-                key={category.title}
-                className="border-white/10 bg-zinc-900/60 transition hover:border-amber-400/30"
-              >
-                <CardHeader>
-                  <CardTitle className="text-white">{category.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="leading-7 text-zinc-400">{category.description}</p>
-                </CardContent>
-              </Card>
+            {featuredContent.map((item) => (
+              <ContentCard key={item.id} item={item} />
             ))}
           </div>
         </Container>
