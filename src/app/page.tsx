@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ContentCard } from "@/features/content/components/ContentCard";
 import { contentItems } from "@/features/content/data/content.data";
+import { SponsorCard } from "@/features/sponsors/components/SponsorCard";
+import { sponsorItems } from "@/features/sponsors/data/sponsors.data";
 
 const sponsorHighlights = [
   "Espacios publicitarios integrados con diseño limpio",
@@ -13,6 +15,9 @@ const sponsorHighlights = [
 ];
 
 const featuredContent = contentItems.filter((item) => item.featured);
+const featuredSponsors = sponsorItems
+  .filter((item) => item.featured)
+  .slice(0, 3);
 
 export default function Home() {
   return (
@@ -94,8 +99,9 @@ export default function Home() {
                 </h2>
                 <p className="mt-4 leading-7 text-zinc-400">
                   El proyecto será gratuito para los usuarios y se financiará
-                  inicialmente mediante sponsors y espacios publicitarios locales,
-                  cuidando siempre la experiencia visual y la claridad del contenido.
+                  inicialmente mediante sponsors y espacios publicitarios
+                  locales, cuidando siempre la experiencia visual y la claridad
+                  del contenido.
                 </p>
               </div>
 
@@ -113,6 +119,25 @@ export default function Home() {
               </div>
             </CardContent>
           </Card>
+        </Container>
+      </section>
+
+      <section className="py-16">
+        <Container>
+          <div className="max-w-2xl">
+            <Badge className="bg-amber-400/15 text-amber-300 hover:bg-amber-400/15">
+              Sponsors destacados
+            </Badge>
+            <h2 className="mt-4 text-3xl font-bold text-white md:text-4xl">
+              Marcas e instituciones que acompañan el proyecto
+            </h2>
+          </div>
+
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {featuredSponsors.map((sponsor) => (
+              <SponsorCard key={sponsor.id} sponsor={sponsor} />
+            ))}
+          </div>
         </Container>
       </section>
     </div>
