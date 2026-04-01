@@ -3,20 +3,19 @@
 ## Purpose
 This skill defines the preferred way to build features for **El Rincón Monterizo**.
 
-Use this skill when implementing:
+Use it for:
 - pages
 - reusable components
-- feature modules
 - content catalog sections
 - sponsor/ad sections
-- admin-related UI
-- integrations with future backend services
+- admin UI
+- future integrations
 
 ---
 
 ## Preferred Workflow
 1. understand the task
-2. identify the minimum viable implementation
+2. identify the minimum viable solution
 3. locate the correct architectural layer
 4. implement only what is needed
 5. keep code typed and readable
@@ -26,50 +25,56 @@ Use this skill when implementing:
 ---
 
 ## Implementation Priorities
-When building features, prioritize:
-
+Prioritize:
 1. correctness
-2. structure
-3. readability
-4. reuse when justified
-5. responsive UI
+2. readability
+3. structure
+4. responsive UI
+5. maintainability
 6. future extensibility without overengineering
 
 ---
 
 ## Folder Guidance
-- page or route work goes in `src/app`
-- shared reusable UI goes in `src/components`
-- feature-specific UI and logic goes in `src/features`
-- utility helpers go in `src/lib`
-- external integrations go in `src/services`
+- route or page work goes in `src/app`
+- reusable UI goes in `src/components`
+- feature-specific logic goes in `src/features`
+- utilities go in `src/lib`
+- service logic goes in `src/services`
 - shared types go in `src/types`
 
 ---
 
-## UI Style Guidance
-- modern, clean, community-oriented
-- readable typography
-- balanced spacing
-- responsive by default
-- avoid noisy layouts
-- prefer elegant simplicity
+## UI Guidance
+The UI should feel:
+- modern
+- clean
+- community-oriented
+- readable
+- balanced
+- responsive
+
+Avoid:
+- noisy layouts
+- excessive visual density
+- inconsistent spacing
+- random styling decisions
 
 ---
 
 ## Clean Code Guidance
 - use descriptive names
-- small focused functions
+- keep functions small
 - avoid deeply nested logic
-- avoid large monolithic components
-- extract repeated logic only when repetition is real
+- avoid giant components
+- extract repeated logic only when reuse is real
 - do not abstract too early
 
 ---
 
-## Product Context Reminder
-This project is an on-demand content platform.
+## Product Reminder
+This project is an on-demand platform.
 It is not focused on live streaming.
-Initial monetization comes from local advertising and sponsors.
+Initial monetization comes from local advertising and sponsor placements.
 
-All implementation decisions should respect that.
+All implementation decisions should align with that.

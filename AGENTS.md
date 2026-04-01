@@ -1,34 +1,31 @@
 # AGENTS.md
 
-## Project Overview
-This project is called **El Rincón Monterizo**.
+## Project
+**El Rincón Monterizo** is a modern web platform for **on-demand educational, cultural, and audiovisual content**.
 
-It is a web platform for **on-demand educational, cultural, and audiovisual content**.
-The platform is intended to be **free for end users** and initially monetized through **local digital advertising** integrated into the site.
+The product is intended to be:
+- free for end users in its initial phase
+- monetized through local advertising and sponsors
+- community-oriented
+- scalable without unnecessary complexity
 
-Main content types planned:
+Main content types:
 - digital books and documents
 - on-demand videos
-- educational and cultural resources
-- local sponsors and ad placements
-
-This project is currently in an early stage and is being built with a strong focus on:
-- clean architecture
-- modular code
-- maintainability
-- scalable growth
-- clear business-oriented structure
+- educational resources
+- cultural content
+- sponsor and advertiser placements
 
 ---
 
-## Main Tech Stack
+## Current Stack
 - Next.js
 - React
 - TypeScript
 - Tailwind CSS
 - ESLint
 
-Planned additions:
+Planned integrations:
 - shadcn/ui
 - Supabase
 - PostgreSQL
@@ -37,117 +34,117 @@ Planned additions:
 
 ---
 
-## Primary Goal for Agents
-Agents must help build the project in a way that is:
-- safe
-- clear
-- predictable
-- maintainable
-- easy to extend later
+## Main Goal for Agents
+Agents must help build the project with:
+- correctness
+- readability
+- clean structure
+- maintainability
+- minimal and focused changes
 
-Agents must prioritize:
-1. correctness
-2. readability
-3. low complexity
-4. consistency with the existing structure
-5. minimal unnecessary changes
+Agents should always prefer:
+1. simple solutions
+2. explicit code
+3. scoped modifications
+4. consistency with the repository structure
+5. business alignment with the product vision
 
 ---
 
-## General Development Rules
-
-### 1. Do not make large uncontrolled changes
-- Do not rewrite unrelated files.
-- Do not refactor large areas unless explicitly requested.
-- Keep changes scoped to the task.
-
-### 2. Prefer clarity over cleverness
-- Use simple and readable code.
-- Avoid over-engineering.
-- Avoid unnecessary abstractions.
-
-### 3. Preserve project structure
+## Repository Structure
 Respect the current structure:
 
-- `src/app` for routes, pages, layouts
-- `src/components` for reusable UI components
-- `src/features` for business/domain modules
-- `src/lib` for utilities and shared helpers
-- `src/services` for external integrations and service logic
-- `src/hooks` for custom React hooks
-- `src/types` for shared TypeScript types
-- `src/constants` for constants
-- `docs/` for project documentation
+- `src/app` → routes, pages, layouts
+- `src/components` → shared reusable UI components
+- `src/features` → business/domain modules
+- `src/lib` → utilities, helpers, configuration clients
+- `src/services` → integration logic and external service access
+- `src/hooks` → custom hooks
+- `src/types` → shared TypeScript types
+- `src/constants` → project constants
+- `docs/` → project documentation
 
-### 4. Follow clean code principles
-- meaningful naming
-- small focused functions
-- low nesting
+Do not place business logic everywhere.
+Keep responsibilities separated.
+
+---
+
+## Coding Rules
+
+### General
+- write readable, production-oriented code
+- avoid unnecessary abstractions
+- avoid premature optimization
+- avoid large unrelated refactors
+- keep functions focused
+- use descriptive names
+- prefer early returns over deep nesting
 - avoid duplicated logic
-- separate UI from business logic when possible
-- prefer composition over monolithic files
 
-### 5. Respect TypeScript
+### TypeScript
 - avoid `any` unless absolutely necessary
-- define types for props, responses, and domain models
-- keep types explicit when they improve clarity
+- define types for props, models, and service responses
+- prefer explicit types when they improve clarity
 
-### 6. UI and styling
+### React / Next.js
+- keep components small and focused
+- do not create giant page files
+- extract reusable components only when reuse is real
+- use server/client boundaries intentionally
+- do not mark components as client components unless required
+
+### Styling
 - use Tailwind CSS
-- keep UI clean and modern
-- prefer reusable components
-- avoid inconsistent spacing and typography
-- prioritize responsive behavior from the beginning
+- keep spacing, typography, and layout consistent
+- prioritize responsive design
+- avoid visual clutter
+- prefer simple and elegant UI
 
-### 7. Accessibility and semantics
+### Accessibility
 - use semantic HTML
-- include accessible labels when needed
-- avoid div-heavy markup when proper tags exist
-
-### 8. Documentation
-When relevant, update documentation in `docs/` if architectural or business rules change.
+- provide labels where necessary
+- avoid div-heavy structures when semantic tags exist
 
 ---
 
-## Business Context Rules
-Agents must remember these product decisions:
+## Product Context Rules
+Agents must remember these decisions:
 
+- This is an **on-demand** platform.
 - This is **not** a live streaming platform.
-- The platform is focused on **on-demand** content.
 - Initial monetization is based on **local advertisers and sponsors**.
-- The experience should feel professional, modern, and community-oriented.
-- The product should be prepared for future growth without becoming unnecessarily complex now.
+- The MVP is not subscription-first.
+- The product should feel modern, clear, and community-oriented.
+- Architecture should support future growth, but the present implementation must remain simple.
 
 ---
 
-## What Agents Should Avoid
-Agents must avoid:
-- adding dependencies without clear justification
-- changing the stack without approval
-- introducing premature backend complexity
-- building features not requested
-- inventing business rules without confirmation
-- assuming paid subscriptions are part of the MVP
-- assuming live streaming is part of the MVP
+## What Agents Must Avoid
+Do not:
+- add dependencies without clear justification
+- change the stack without approval
+- invent business rules
+- assume premium subscriptions are part of the MVP
+- assume live streaming is part of the MVP
+- add unrequested features
+- introduce complexity to “future-proof” everything
 
 ---
 
-## How Agents Should Respond to Tasks
-For significant tasks, agents should:
-1. understand the goal
+## Task Execution Style
+For medium or large tasks:
+1. understand the request
 2. identify impacted files
-3. propose a concise plan
-4. apply focused changes
+3. propose a short plan
+4. implement focused changes
 5. explain what changed
 
-For small tasks, agents can act directly but should still keep changes minimal and coherent.
+For small tasks:
+- act directly
+- keep changes minimal
+- preserve consistency
 
 ---
 
-## Current Product Direction
-The current product direction is:
-
-**El Rincón Monterizo**
-A modern on-demand digital platform for educational, cultural, and audiovisual content, with a future-ready architecture and an initial local-advertising monetization model.
-
-Agents should align all technical work with that direction.
+## Documentation Rule
+When architectural, business, or development rules change, update relevant docs in `docs/`.
