@@ -9,8 +9,13 @@ import { ContentCard } from "@/features/content/components/ContentCard";
 import { CultureDetailPanel } from "@/features/content/components/detail/CultureDetailPanel";
 import { LibraryDetailPanel } from "@/features/content/components/detail/LibraryDetailPanel";
 import { VideoDetailPanel } from "@/features/content/components/detail/VideoDetailPanel";
-import { contentItems } from "@/features/content/data/content.data";
 import type { ContentItem } from "@/features/content/types/content";
+import {
+  getMockContentById,
+  getMockRelatedContent,
+  getPublishedContentById,
+  getRelatedPublishedContent,
+} from "@/services/content.server";
 
 type ContentDetailPageProps = {
   params: Promise<{
@@ -37,12 +42,21 @@ function renderDetailPanel(item: ContentItem) {
   return <LibraryDetailPanel item={item} />;
 }
 
+async function resolveContentById(id: string): Promise<ContentItem | null> {
+  const dbItem = await getPublishedContentById(id);
+
+  if (dbItem) {
+    return dbItem;
+  }
+
+  return getMockContentById(id);
+}
+
 export async function generateMetadata({
   params,
 }: ContentDetailPageProps): Promise<Metadata> {
   const { id } = await params;
-
-  const item = contentItems.find((content) => content.id === id);
+  const item = await resolveContentById(id);
 
   if (!item) {
     return {
@@ -61,15 +75,16 @@ export default async function ContentDetailPage({
 }: ContentDetailPageProps) {
   const { id } = await params;
 
-  const item = contentItems.find((content) => content.id === id);
+  const dbItem = await getPublishedContentById(id);
+  const item = dbItem ?? getMockContentById(id);
 
   if (!item) {
     notFound();
   }
 
-  const relatedItems = contentItems
-    .filter((content) => content.category === item.category && content.id !== item.id)
-    .slice(0, 3);
+  const relatedItems = dbItem
+    ? await getRelatedPublishedContent(item.category, item.id)
+    : getMockRelatedContent(item.category, item.id);
 
   return (
     <section className="py-16">
