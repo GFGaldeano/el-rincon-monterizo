@@ -5,8 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ContentCard } from "@/features/content/components/ContentCard";
 import { SponsorCard } from "@/features/sponsors/components/SponsorCard";
-import { sponsorItems } from "@/features/sponsors/data/sponsors.data";
 import { getFeaturedPublishedContent } from "@/services/content.server";
+import { getFeaturedActiveSponsors } from "@/services/sponsors.server";
 
 const sponsorHighlights = [
   "Espacios publicitarios integrados con diseño limpio",
@@ -14,10 +14,10 @@ const sponsorHighlights = [
   "Modelo gratuito para usuarios en etapa inicial",
 ];
 
-const featuredSponsors = sponsorItems.filter((item) => item.featured).slice(0, 3);
-
 export default async function Home() {
   const { data: featuredContent, error } = await getFeaturedPublishedContent(3);
+  const { data: featuredSponsors, error: sponsorsError } =
+    await getFeaturedActiveSponsors(3);
 
   return (
     <div className="bg-zinc-950">
@@ -143,11 +143,23 @@ export default async function Home() {
             </h2>
           </div>
 
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
-            {featuredSponsors.map((sponsor) => (
-              <SponsorCard key={sponsor.id} sponsor={sponsor} />
-            ))}
-          </div>
+          {sponsorsError ? (
+            <div className="mt-6 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-200">
+              No se pudieron cargar los sponsors destacados desde Supabase: {sponsorsError}
+            </div>
+          ) : null}
+
+          {featuredSponsors.length > 0 ? (
+            <div className="mt-10 grid gap-6 md:grid-cols-3">
+              {featuredSponsors.map((sponsor) => (
+                <SponsorCard key={sponsor.id} sponsor={sponsor} />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-10 rounded-2xl border border-white/10 bg-zinc-900/60 p-6 text-zinc-400">
+              Aún no hay sponsors destacados activos.
+            </div>
+          )}
         </Container>
       </section>
     </div>

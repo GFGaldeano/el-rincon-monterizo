@@ -2,11 +2,12 @@ import { Container } from "@/components/layout/Container";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { SponsorCard } from "@/features/sponsors/components/SponsorCard";
-import { sponsorItems } from "@/features/sponsors/data/sponsors.data";
+import { getActiveSponsors, getFeaturedActiveSponsors } from "@/services/sponsors.server";
 
-const featuredSponsors = sponsorItems.filter((item) => item.featured);
+export default async function SponsorsPage() {
+  const { data: sponsors, error } = await getActiveSponsors();
+  const { data: featuredSponsors } = await getFeaturedActiveSponsors(3);
 
-export default function SponsorsPage() {
   return (
     <section className="py-16">
       <Container>
@@ -57,6 +58,12 @@ export default function SponsorsPage() {
           </CardContent>
         </Card>
 
+        {error ? (
+          <div className="mt-8 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-200">
+            No se pudieron cargar los sponsors desde Supabase: {error}
+          </div>
+        ) : null}
+
         {featuredSponsors.length > 0 && (
           <div className="mt-16">
             <div className="max-w-2xl">
@@ -86,11 +93,17 @@ export default function SponsorsPage() {
             </h2>
           </div>
 
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
-            {sponsorItems.map((sponsor) => (
-              <SponsorCard key={sponsor.id} sponsor={sponsor} />
-            ))}
-          </div>
+          {sponsors.length > 0 ? (
+            <div className="mt-10 grid gap-6 md:grid-cols-3">
+              {sponsors.map((sponsor) => (
+                <SponsorCard key={sponsor.id} sponsor={sponsor} />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-10 rounded-2xl border border-white/10 bg-zinc-900/60 p-6 text-zinc-400">
+              Aún no hay sponsors activos publicados.
+            </div>
+          )}
         </div>
       </Container>
     </section>
