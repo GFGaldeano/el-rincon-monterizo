@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -5,6 +6,7 @@ import { notFound } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ContentCard } from "@/features/content/components/ContentCard";
 import { contentItems } from "@/features/content/data/content.data";
 
 type ContentDetailPageProps = {
@@ -20,6 +22,25 @@ const categoryLabelMap: Record<string, string> = {
   documento: "Documento",
 };
 
+export async function generateMetadata({
+  params,
+}: ContentDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+
+  const item = contentItems.find((content) => content.id === id);
+
+  if (!item) {
+    return {
+      title: "Contenido no encontrado | El Rincón Monterizo",
+    };
+  }
+
+  return {
+    title: `${item.title} | El Rincón Monterizo`,
+    description: item.description,
+  };
+}
+
 export default async function ContentDetailPage({
   params,
 }: ContentDetailPageProps) {
@@ -30,6 +51,10 @@ export default async function ContentDetailPage({
   if (!item) {
     notFound();
   }
+
+  const relatedItems = contentItems
+    .filter((content) => content.category === item.category && content.id !== item.id)
+    .slice(0, 3);
 
   return (
     <section className="py-16">
@@ -81,6 +106,25 @@ export default async function ContentDetailPage({
             </div>
           </div>
         </div>
+
+        {relatedItems.length > 0 && (
+          <div className="mt-20">
+            <div className="max-w-2xl">
+              <Badge className="bg-amber-400/15 text-amber-300 hover:bg-amber-400/15">
+                Relacionado
+              </Badge>
+              <h2 className="mt-4 text-3xl font-bold text-white">
+                Más contenido que podría interesarte
+              </h2>
+            </div>
+
+            <div className="mt-10 grid gap-6 md:grid-cols-3">
+              {relatedItems.map((relatedItem) => (
+                <ContentCard key={relatedItem.id} item={relatedItem} />
+              ))}
+            </div>
+          </div>
+        )}
       </Container>
     </section>
   );
