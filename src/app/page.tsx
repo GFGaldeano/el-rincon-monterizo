@@ -7,6 +7,7 @@ import { ContentCard } from "@/features/content/components/ContentCard";
 import { contentItems } from "@/features/content/data/content.data";
 import { SponsorCard } from "@/features/sponsors/components/SponsorCard";
 import { sponsorItems } from "@/features/sponsors/data/sponsors.data";
+import { getFeaturedPublishedContent } from "@/services/content.server";
 
 const sponsorHighlights = [
   "Espacios publicitarios integrados con diseño limpio",
@@ -14,12 +15,16 @@ const sponsorHighlights = [
   "Modelo gratuito para usuarios en etapa inicial",
 ];
 
-const featuredContent = contentItems.filter((item) => item.featured);
-const featuredSponsors = sponsorItems
-  .filter((item) => item.featured)
-  .slice(0, 3);
+const featuredSponsors = sponsorItems.filter((item) => item.featured).slice(0, 3);
 
-export default function Home() {
+export default async function Home() {
+  const { data: featuredContentFromDb, error } = await getFeaturedPublishedContent(3);
+
+  const featuredContent =
+    featuredContentFromDb.length > 0
+      ? featuredContentFromDb
+      : contentItems.filter((item) => item.featured).slice(0, 3);
+
   return (
     <div className="bg-zinc-950">
       <section className="py-20">
@@ -78,6 +83,12 @@ export default function Home() {
             </h2>
           </div>
 
+          {error ? (
+            <div className="mt-6 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-200">
+              No se pudo cargar el contenido destacado desde Supabase: {error}
+            </div>
+          ) : null}
+
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {featuredContent.map((item) => (
               <ContentCard key={item.id} item={item} />
@@ -99,9 +110,8 @@ export default function Home() {
                 </h2>
                 <p className="mt-4 leading-7 text-zinc-400">
                   El proyecto será gratuito para los usuarios y se financiará
-                  inicialmente mediante sponsors y espacios publicitarios
-                  locales, cuidando siempre la experiencia visual y la claridad
-                  del contenido.
+                  inicialmente mediante sponsors y espacios publicitarios locales,
+                  cuidando siempre la experiencia visual y la claridad del contenido.
                 </p>
               </div>
 
