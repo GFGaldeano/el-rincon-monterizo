@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Container } from "@/components/layout/Container";
 
 const navItems = [
   { label: "Inicio", href: "/" },
@@ -11,13 +14,16 @@ const navItems = [
 export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-zinc-950/85 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+      <Container className="flex items-center justify-between py-4">
         <Link href="/" className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-400 font-bold text-zinc-950">
             ER
           </div>
+
           <div>
-            <p className="text-sm font-medium text-zinc-300">Plataforma on-demand</p>
+            <Badge variant="secondary" className="mb-1">
+              Plataforma on-demand
+            </Badge>
             <h1 className="text-lg font-bold text-white">El Rincón Monterizo</h1>
           </div>
         </Link>
@@ -35,11 +41,9 @@ export function Header() {
         </nav>
 
         <div className="hidden md:block">
-          <button className="rounded-full border border-amber-400/40 px-4 py-2 text-sm font-semibold text-amber-300 transition hover:bg-amber-400/10">
-            Comunidad local
-          </button>
+          <Button variant="outline">Comunidad local</Button>
         </div>
-      </div>
+      </Container>
     </header>
   );
 }
