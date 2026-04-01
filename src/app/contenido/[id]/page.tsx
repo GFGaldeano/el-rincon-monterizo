@@ -5,9 +5,12 @@ import { notFound } from "next/navigation";
 
 import { Container } from "@/components/layout/Container";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { ContentCard } from "@/features/content/components/ContentCard";
+import { CultureDetailPanel } from "@/features/content/components/detail/CultureDetailPanel";
+import { LibraryDetailPanel } from "@/features/content/components/detail/LibraryDetailPanel";
+import { VideoDetailPanel } from "@/features/content/components/detail/VideoDetailPanel";
 import { contentItems } from "@/features/content/data/content.data";
+import type { ContentItem } from "@/features/content/types/content";
 
 type ContentDetailPageProps = {
   params: Promise<{
@@ -21,6 +24,18 @@ const categoryLabelMap: Record<string, string> = {
   cultura: "Cultura",
   documento: "Documento",
 };
+
+function renderDetailPanel(item: ContentItem) {
+  if (item.category === "video") {
+    return <VideoDetailPanel item={item} />;
+  }
+
+  if (item.category === "cultura") {
+    return <CultureDetailPanel item={item} />;
+  }
+
+  return <LibraryDetailPanel item={item} />;
+}
 
 export async function generateMetadata({
   params,
@@ -68,43 +83,37 @@ export default async function ContentDetailPage({
           </Link>
         </div>
 
-        <div className="grid gap-10 md:grid-cols-2 md:items-start">
-          <div className="relative h-[320px] overflow-hidden rounded-3xl border border-white/10 bg-zinc-900 md:h-[480px]">
-            <Image
-              src={item.imageUrl}
-              alt={item.title}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              priority
-            />
-          </div>
-
+        <div className="grid gap-10 xl:grid-cols-[1.2fr_0.8fr]">
           <div>
-            <Badge className="bg-amber-400/15 text-amber-300 hover:bg-amber-400/15">
-              {categoryLabelMap[item.category] ?? item.category}
-            </Badge>
+            <div className="relative h-[320px] overflow-hidden rounded-3xl border border-white/10 bg-zinc-900 md:h-[480px]">
+              <Image
+                src={item.imageUrl}
+                alt={item.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                priority
+              />
+            </div>
 
-            <h1 className="mt-4 text-4xl font-bold tracking-tight text-white md:text-5xl">
-              {item.title}
-            </h1>
+            <div className="mt-8">
+              <Badge className="bg-amber-400/15 text-amber-300 hover:bg-amber-400/15">
+                {categoryLabelMap[item.category] ?? item.category}
+              </Badge>
 
-            <p className="mt-4 text-sm text-zinc-500">Autor: {item.author}</p>
+              <h1 className="mt-4 text-4xl font-bold tracking-tight text-white md:text-5xl">
+                {item.title}
+              </h1>
 
-            <p className="mt-6 text-lg leading-8 text-zinc-300">
-              {item.description}
-            </p>
+              <p className="mt-4 text-sm text-zinc-500">Autor: {item.author}</p>
 
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Button className="bg-amber-400 text-zinc-950 hover:bg-amber-300">
-                Ver contenido
-              </Button>
-
-              <Button asChild variant="outline">
-                <Link href="/biblioteca">Explorar más</Link>
-              </Button>
+              <p className="mt-6 text-lg leading-8 text-zinc-300">
+                {item.description}
+              </p>
             </div>
           </div>
+
+          <div>{renderDetailPanel(item)}</div>
         </div>
 
         {relatedItems.length > 0 && (

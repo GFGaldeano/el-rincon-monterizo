@@ -11,6 +11,9 @@ export const contentItems: ContentItem[] = [
     imageUrl:
       "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=80",
     featured: true,
+    format: "PDF",
+    pages: 48,
+    organization: "Archivo local",
   },
   {
     id: "2",
@@ -22,6 +25,9 @@ export const contentItems: ContentItem[] = [
     imageUrl:
       "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80",
     featured: true,
+    duration: "32 min",
+    format: "Video HD",
+    organization: "Programa educativo",
   },
   {
     id: "3",
@@ -33,6 +39,8 @@ export const contentItems: ContentItem[] = [
     imageUrl:
       "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?auto=format&fit=crop&w=1200&q=80",
     featured: true,
+    format: "Especial editorial",
+    organization: "Red Cultural",
   },
   {
     id: "4",
@@ -43,6 +51,9 @@ export const contentItems: ContentItem[] = [
     author: "Comunidad Emprende",
     imageUrl:
       "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=80",
+    format: "PDF",
+    pages: 26,
+    organization: "Comunidad Emprende",
   },
   {
     id: "5",
@@ -53,6 +64,9 @@ export const contentItems: ContentItem[] = [
     author: "Equipo Educativo",
     imageUrl:
       "https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&w=1200&q=80",
+    duration: "18 min",
+    format: "Video HD",
+    organization: "Aula abierta",
   },
   {
     id: "6",
@@ -63,5 +77,8 @@ export const contentItems: ContentItem[] = [
     author: "El Rincón Monterizo",
     imageUrl:
       "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=1200&q=80",
+    format: "Colección digital",
+    pages: 60,
+    organization: "Biblioteca comunitaria",
   },
 ];

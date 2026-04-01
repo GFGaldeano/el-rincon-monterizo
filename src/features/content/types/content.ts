@@ -12,4 +12,8 @@ export type ContentItem = {
   author: string;
   imageUrl: string;
   featured?: boolean;
+  duration?: string;
+  format?: string;
+  pages?: number;
+  organization?: string;
 };
