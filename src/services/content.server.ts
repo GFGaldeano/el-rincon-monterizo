@@ -268,3 +268,48 @@ export async function getPublishedVideoContent(): Promise<{
     error: null,
   };
 }
+
+export async function getPublishedCultureContent(): Promise<{
+  data: ContentItem[];
+  error: string | null;
+}> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("content")
+    .select(
+      `
+        id,
+        slug,
+        title,
+        description,
+        category,
+        author_name,
+        organization_name,
+        cover_image_url,
+        content_url,
+        format,
+        duration_seconds,
+        page_count,
+        is_featured,
+        is_published,
+        published_at,
+        display_order
+      `
+    )
+    .eq("category", "cultura")
+    .eq("is_published", true)
+    .order("display_order", { ascending: true });
+
+  if (error) {
+    return {
+      data: [],
+      error: error.message,
+    };
+  }
+
+  return {
+    data: ((data ?? []) as ContentRecord[]).map(mapContentRecord),
+    error: null,
+  };
+}

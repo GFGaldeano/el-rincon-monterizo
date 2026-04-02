@@ -1,10 +1,43 @@
-export default function CulturaPage() {
+import { Container } from "@/components/layout/Container";
+import { Badge } from "@/components/ui/badge";
+import { ContentCard } from "@/features/content/components/ContentCard";
+import { getPublishedCultureContent } from "@/services/content.server";
+
+export default async function CulturaPage() {
+  const { data: cultureItems, error } = await getPublishedCultureContent();
+
   return (
-    <section className="mx-auto max-w-7xl px-6 py-16">
-      <h1 className="text-4xl font-bold text-white">Cultura</h1>
-      <p className="mt-4 text-zinc-400">
-        Próximamente encontrarás contenidos culturales y comunitarios.
-      </p>
+    <section className="py-16">
+      <Container>
+        <Badge className="bg-amber-400/15 text-amber-300 hover:bg-amber-400/15">
+          Cultura y comunidad
+        </Badge>
+
+        <h1 className="mt-4 text-4xl font-bold text-white">Cultura</h1>
+
+        <p className="mt-4 max-w-2xl text-zinc-400">
+          Contenidos orientados a visibilizar identidad local, memoria colectiva,
+          expresiones culturales y propuestas con valor comunitario.
+        </p>
+
+        {error ? (
+          <div className="mt-8 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-200">
+            No se pudo cargar el contenido cultural desde Supabase: {error}
+          </div>
+        ) : null}
+
+        {cultureItems.length > 0 ? (
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {cultureItems.map((item) => (
+              <ContentCard key={item.id} item={item} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-10 rounded-2xl border border-white/10 bg-zinc-900/60 p-6 text-zinc-400">
+            Aún no hay contenido cultural publicado.
+          </div>
+        )}
+      </Container>
     </section>
   );
 }
