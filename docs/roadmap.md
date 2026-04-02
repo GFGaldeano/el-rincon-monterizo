@@ -1,3 +1,9 @@
+
+---
+
+## `docs/roadmap.md`
+
+```md
 # Roadmap
 
 ## Phase 1 - Foundation
@@ -69,6 +75,7 @@
 - [x] migrate biblioteca to Supabase
 - [x] migrate homepage featured content to Supabase
 - [x] migrate videos to Supabase
+- [x] migrate cultura to Supabase
 - [x] remove mock fallback from content detail
 - [x] remove mock fallback from homepage content
 - [x] remove mock fallback from videos page
@@ -80,25 +87,39 @@
 - [x] migrate featured sponsors on homepage to Supabase
 - [x] stop depending on mock sponsors in public UI
 
-## Phase 10 - Remaining Public Section
-- [ ] define and implement real `/cultura` data flow
-- [ ] decide whether cultura lives inside `content` only or needs editorial structure
-- [ ] connect `/cultura` to Supabase
+## Phase 10 - Admin Access Foundation
+- [x] define initial admin access strategy
+- [x] add admin email allowlist
+- [x] create admin login page
+- [x] create protected `/admin` route
+- [x] add Supabase login with email/password
+- [x] add admin sign-out flow
+- [x] protect `/admin` routes through Proxy
+- [x] validate admin access server-side in dashboard page
+- [x] create initial admin dashboard
 
-## Phase 11 - Admin and Content Management
-- [ ] define admin access strategy
-- [ ] design content creation/editing flow
-- [ ] design sponsor management flow
-- [ ] define publication workflow
+## Phase 11 - Admin Content Management
+- [ ] create admin content list page
+- [ ] create content creation form
+- [ ] create content edit flow
+- [ ] create publish/unpublish flow
+- [ ] persist content creation in Supabase
 
-## Phase 12 - Media and Experience
+## Phase 12 - Admin Sponsors Management
+- [ ] create admin sponsors list page
+- [ ] create sponsor creation form
+- [ ] create sponsor edit flow
+- [ ] create sponsor activate/deactivate flow
+- [ ] persist sponsor management in Supabase
+
+## Phase 13 - Media and Experience
 - [ ] define real video playback experience
 - [ ] define real library/document reading experience
 - [ ] define culture/editorial reading experience
 - [ ] prepare media integration with Mux
 - [ ] define content detail actions with real behavior
 
-## Phase 13 - Production Readiness
+## Phase 14 - Production Readiness
 - [ ] SEO basics
 - [ ] performance review
 - [ ] deployment configuration

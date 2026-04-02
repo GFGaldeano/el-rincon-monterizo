@@ -10,6 +10,7 @@ The current MVP needs to support:
 - featured content
 - featured sponsors
 - future publication workflows
+- protected administrative access
 
 ---
 
@@ -20,16 +21,22 @@ The `content` entity is already in active use through Supabase for:
 - homepage featured content
 - biblioteca page
 - videos page
+- cultura page
 - dynamic content detail page
 - related content section
-- test page for database validation
 
 ### Sponsors
-The `sponsors` entity is also already in active use through Supabase for:
+The `sponsors` entity is already in active use through Supabase for:
 - sponsors page
 - featured sponsors section on homepage
 
-At this stage, the public UI is already using real database reads for both content and sponsors.
+### Admin Access
+Admin access is currently handled through:
+- Supabase Auth users
+- protected routes
+- allowlist of admin emails in environment variables
+
+At this stage, the public UI is already using real database reads for both content and sponsors, while admin management flows are still pending.
 
 ---
 
@@ -74,6 +81,7 @@ Important fields:
 - featured homepage content
 - biblioteca content listing
 - videos content listing
+- cultura content listing
 - dynamic content detail
 - related content section
 
@@ -106,6 +114,19 @@ Important fields:
 ### Current usage in frontend
 - sponsors page
 - featured sponsors section on homepage
+
+---
+
+## Current Auth Strategy
+
+### Admin authentication
+The project currently uses:
+- Supabase Auth for login
+- protected admin routes
+- server-side admin verification
+- email allowlist through environment variables
+
+This means admin capability is already separated from public browsing, even though admin CRUD tables and flows are not yet implemented.
 
 ---
 
@@ -156,10 +177,9 @@ The project has already completed the public migration for:
 - content
 - sponsors
 
-The remaining migration work is focused on:
-- `/cultura`
-- admin flows
-- content management workflows
+The current pending backend work is focused on:
+- admin CRUD flows
+- publication workflows
 - sponsor management workflows
 - richer media behavior
 
@@ -167,7 +187,6 @@ The remaining migration work is focused on:
 
 ## Future Extensions
 Possible future entities:
-- users
 - admin_profiles
 - content_assets
 - sponsor_slots

@@ -230,10 +230,13 @@ Actualmente el proyecto ya cuenta con:
 - lectura real de contenidos desde base de datos
 - lectura real de sponsors desde base de datos
 - esquema SQL inicial del MVP documentado en `database/schema.sql`
+- autenticación admin con Supabase Auth
+- rutas protegidas para administración
+- dashboard admin inicial
 
 El proyecto continúa avanzando hacia:
-- gestión administrativa de contenidos
-- gestión de sponsors
+- alta y edición de contenidos desde panel admin
+- alta y edición de sponsors desde panel admin
 - reproducción real de video
 - experiencia de lectura/documentos
 - endurecimiento para producción

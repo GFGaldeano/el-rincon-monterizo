@@ -30,7 +30,9 @@ The project currently includes:
 - custom not-found page
 - Supabase integration for content reads
 - Supabase integration for sponsors reads
-- database-backed public content and sponsor sections
+- admin authentication flow
+- protected admin routes
+- initial admin dashboard
 
 ## Out of Scope for Current MVP
 The following are not part of the current MVP unless explicitly approved:
@@ -55,6 +57,11 @@ The following are not part of the current MVP unless explicitly approved:
 - Supabase
 - PostgreSQL
 
+### Authentication
+- Supabase Auth
+- protected admin routes using Proxy
+- admin allowlist based on email
+
 ### Planned Video Layer
 - Mux
 
@@ -66,6 +73,8 @@ The following are not part of the current MVP unless explicitly approved:
 ```text
 src/
   app/
+    admin/
+      login/
     biblioteca/
     contenido/
       [id]/
@@ -81,6 +90,8 @@ src/
     ui/
   constants/
   features/
+    admin/
+      components/
     content/
       components/
         detail/
@@ -91,11 +102,16 @@ src/
   hooks/
   lib/
     supabase/
+      client.ts
+      proxy.ts
+      server.ts
+    admin.ts
     env.ts
   services/
     content.server.ts
     sponsors.server.ts
   types/
+  proxy.ts
 docs/
   architecture.md
   coding-standards.md
