@@ -1,9 +1,3 @@
-
----
-
-## `docs/roadmap.md`
-
-```md
 # Roadmap
 
 ## Phase 1 - Foundation
@@ -38,11 +32,7 @@
 ## Phase 4 - Content Structure
 - [x] define content categories
 - [x] create content types
-- [x] create mock content dataset
 - [x] create reusable content card
-- [x] render featured content on homepage
-- [x] render filtered content in Biblioteca
-- [x] render filtered content in Videos
 - [x] create dynamic content route `/contenido/[id]`
 - [x] add related content section
 - [x] add custom not-found page
@@ -51,9 +41,8 @@
 
 ## Phase 5 - Sponsors / Advertising
 - [x] define sponsor types
-- [x] create mock sponsors dataset
 - [x] create reusable sponsor card
-- [x] create real sponsors page
+- [x] create sponsors page
 - [x] add featured sponsors to UI
 - [x] validate sponsor section as part of business model
 
@@ -70,28 +59,31 @@
 - [x] create browser Supabase client
 - [x] create server Supabase client
 - [x] create initial content read policy
+- [x] create initial sponsors read policy
 - [x] insert first real content records
+- [x] insert first real sponsor records
 - [x] validate database reads with `/test-supabase`
 
-## Phase 8 - Partial Content Migration to Supabase
+## Phase 8 - Public Content Migration to Supabase
 - [x] create server content service layer
 - [x] migrate biblioteca to Supabase
 - [x] migrate homepage featured content to Supabase
-- [x] support hybrid content detail resolution (DB first, mock fallback)
+- [x] migrate videos to Supabase
+- [x] remove mock fallback from content detail
+- [x] remove mock fallback from homepage content
+- [x] remove mock fallback from videos page
+- [x] keep content detail fully database-backed
 
-## Phase 9 - Pending Content Migration
-- [ ] migrate `/videos` to Supabase
-- [ ] migrate content detail fully to database-backed records
-- [ ] stop depending on mock content data in public pages
-- [ ] add more real content records in Supabase
-- [ ] define slug-based detail strategy if needed
+## Phase 9 - Public Sponsors Migration to Supabase
+- [x] create sponsor service layer
+- [x] migrate `/sponsors` to Supabase
+- [x] migrate featured sponsors on homepage to Supabase
+- [x] stop depending on mock sponsors in public UI
 
-## Phase 10 - Sponsors Data Migration
-- [ ] define sponsor table policies
-- [ ] insert real sponsors in Supabase
-- [ ] create sponsor service layer
-- [ ] migrate `/sponsors` from mock data to Supabase
-- [ ] migrate featured sponsors on homepage to Supabase
+## Phase 10 - Remaining Public Section
+- [ ] define and implement real `/cultura` data flow
+- [ ] decide whether cultura lives inside `content` only or needs editorial structure
+- [ ] connect `/cultura` to Supabase
 
 ## Phase 11 - Admin and Content Management
 - [ ] define admin access strategy
@@ -100,7 +92,7 @@
 - [ ] define publication workflow
 
 ## Phase 12 - Media and Experience
-- [ ] define real video detail experience
+- [ ] define real video playback experience
 - [ ] define real library/document reading experience
 - [ ] define culture/editorial reading experience
 - [ ] prepare media integration with Mux

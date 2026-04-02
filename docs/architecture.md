@@ -25,12 +25,12 @@ The project currently includes:
 - base application layout
 - navigation structure
 - public browsing sections
-- mock sponsors module
 - dynamic content detail pages
 - differentiated detail experience by content type
 - custom not-found page
 - Supabase integration for content reads
-- hybrid data strategy during migration from mock data to database
+- Supabase integration for sponsors reads
+- database-backed public content and sponsor sections
 
 ## Out of Scope for Current MVP
 The following are not part of the current MVP unless explicitly approved:
@@ -84,11 +84,9 @@ src/
     content/
       components/
         detail/
-      data/
       types/
     sponsors/
       components/
-      data/
       types/
   hooks/
   lib/
@@ -96,6 +94,7 @@ src/
     env.ts
   services/
     content.server.ts
+    sponsors.server.ts
   types/
 docs/
   architecture.md

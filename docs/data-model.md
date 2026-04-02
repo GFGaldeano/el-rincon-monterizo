@@ -19,15 +19,17 @@ The current MVP needs to support:
 The `content` entity is already in active use through Supabase for:
 - homepage featured content
 - biblioteca page
+- videos page
+- dynamic content detail page
+- related content section
 - test page for database validation
 
-The detail page currently uses a hybrid strategy:
-- database content first
-- mock fallback when the record is not yet migrated
-
 ### Sponsors
-The `sponsors` entity is already designed in SQL, but the frontend still consumes mock sponsor data.
-This part has not yet been migrated to live database reads.
+The `sponsors` entity is also already in active use through Supabase for:
+- sponsors page
+- featured sponsors section on homepage
+
+At this stage, the public UI is already using real database reads for both content and sponsors.
 
 ---
 
@@ -71,6 +73,7 @@ Important fields:
 ### Current usage in frontend
 - featured homepage content
 - biblioteca content listing
+- videos content listing
 - dynamic content detail
 - related content section
 
@@ -103,8 +106,6 @@ Important fields:
 ### Current usage in frontend
 - sponsors page
 - featured sponsors section on homepage
-
-At this stage, sponsors are still using mock data in the application layer.
 
 ---
 
@@ -144,22 +145,23 @@ This structure supports the current frontend already built:
 - featured sponsors section
 
 It also keeps the migration path simple:
-- replace mock arrays with database queries
 - keep the UI structure
-- introduce admin flows later
+- move progressively into real admin workflows
+- extend entities later without rethinking the public model
 
 ---
 
-## Current Migration Strategy
-The project is intentionally using a phased migration approach:
+## Current Migration Status
+The project has already completed the public migration for:
+- content
+- sponsors
 
-1. define schema first
-2. validate Supabase connection
-3. migrate content reads gradually
-4. keep fallback mock data temporarily
-5. migrate sponsors later
-
-This reduces risk and keeps the public UI stable while backend integration advances.
+The remaining migration work is focused on:
+- `/cultura`
+- admin flows
+- content management workflows
+- sponsor management workflows
+- richer media behavior
 
 ---
 

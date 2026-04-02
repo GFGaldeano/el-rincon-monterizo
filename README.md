@@ -214,3 +214,26 @@ el-rincon-monterizo/
 ├── CLAUDE.md               # Archivo de apoyo para desarrollo asistido
 ├── README.md
 └── package.json
+```
+---
+
+### 🔄 Estado actual del desarrollo
+
+Actualmente el proyecto ya cuenta con:
+
+- estructura base en Next.js App Router
+- UI inicial responsive con Tailwind CSS y shadcn/ui
+- layout principal con header y footer
+- catálogo público de contenidos
+- detalle dinámico de contenido por categoría
+- integración con Supabase
+- lectura real de contenidos desde base de datos
+- lectura real de sponsors desde base de datos
+- esquema SQL inicial del MVP documentado en `database/schema.sql`
+
+El proyecto continúa avanzando hacia:
+- gestión administrativa de contenidos
+- gestión de sponsors
+- reproducción real de video
+- experiencia de lectura/documentos
+- endurecimiento para producción
