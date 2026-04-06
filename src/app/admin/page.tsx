@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { Container } from "@/components/layout/Container";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { AdminSignOutButton } from "@/features/admin/components/AdminSignOutButton";
 import { isAdminEmail } from "@/lib/admin";
@@ -12,11 +14,10 @@ export default async function AdminPage() {
 
   const { data: claimsData } = await supabase.auth.getClaims();
 
-const email =
-  claimsData &&
-  typeof claimsData.claims.email === "string"
-    ? claimsData.claims.email
-    : null;
+  const email =
+    claimsData && typeof claimsData.claims.email === "string"
+      ? claimsData.claims.email
+      : null;
 
   if (!isAdminEmail(email)) {
     redirect("/admin/login");
@@ -44,8 +45,14 @@ const email =
             <CardContent className="p-6">
               <h2 className="text-xl font-semibold text-white">Contenidos</h2>
               <p className="mt-3 text-zinc-400">
-                Próximo paso: alta, edición y publicación de contenidos.
+                Alta inicial y listado de contenidos publicados o borradores.
               </p>
+
+              <div className="mt-4">
+                <Button asChild variant="outline">
+                  <Link href="/admin/content">Ir a contenidos</Link>
+                </Button>
+              </div>
             </CardContent>
           </Card>
 
@@ -55,6 +62,12 @@ const email =
               <p className="mt-3 text-zinc-400">
                 Próximo paso: alta, edición y activación de sponsors.
               </p>
+
+              <div className="mt-4">
+                <Button asChild variant="outline">
+                  <Link href="/admin/sponsors">Ir a sponsors</Link>
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
