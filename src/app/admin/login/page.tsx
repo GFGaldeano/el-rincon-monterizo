@@ -1,6 +1,16 @@
+import { Suspense } from "react";
+
 import { Container } from "@/components/layout/Container";
 import { Badge } from "@/components/ui/badge";
 import { AdminLoginForm } from "@/features/admin/components/AdminLoginForm";
+
+function AdminLoginFallback() {
+  return (
+    <div className="w-full max-w-md rounded-2xl border border-white/10 bg-zinc-900/70 p-6 text-center text-zinc-400">
+      Cargando formulario...
+    </div>
+  );
+}
 
 export default function AdminLoginPage() {
   return (
@@ -20,7 +30,9 @@ export default function AdminLoginPage() {
           </p>
         </div>
 
-        <AdminLoginForm />
+        <Suspense fallback={<AdminLoginFallback />}>
+          <AdminLoginForm />
+        </Suspense>
       </Container>
     </section>
   );
