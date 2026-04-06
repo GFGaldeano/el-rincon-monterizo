@@ -11,6 +11,7 @@ The current MVP needs to support:
 - featured sponsors
 - future publication workflows
 - protected administrative access
+- multi-provider video playback
 
 ---
 
@@ -24,6 +25,8 @@ The `content` entity is already in active use through Supabase for:
 - cultura page
 - dynamic content detail page
 - related content section
+- admin content listing
+- admin content creation
 
 ### Sponsors
 The `sponsors` entity is already in active use through Supabase for:
@@ -35,8 +38,16 @@ Admin access is currently handled through:
 - Supabase Auth users
 - protected routes
 - allowlist of admin emails in environment variables
+- server-side verification before protected admin operations
 
-At this stage, the public UI is already using real database reads for both content and sponsors, while admin management flows are still pending.
+### Admin Writes
+Administrative writes are currently enabled for content through:
+- server actions
+- server-only Supabase admin client
+- protected admin routes
+- server-side admin validation before insert operations
+
+At this stage, the public UI is already using real database reads for both content and sponsors, and content creation from the admin panel is already persisted in Supabase.
 
 ---
 
@@ -76,6 +87,8 @@ Important fields:
 - is_published
 - published_at
 - display_order
+- video_provider
+- mux_playback_id
 
 ### Current usage in frontend
 - featured homepage content
@@ -84,6 +97,32 @@ Important fields:
 - cultura content listing
 - dynamic content detail
 - related content section
+- video playback routing by provider
+
+### Current usage in admin
+- content list in `/admin/content`
+- content creation in `/admin/content/new`
+
+### Notes about video fields
+The content model now supports a flexible video strategy:
+
+- `content_url`
+  - used for YouTube URLs
+  - used for external playback URLs
+  - may be empty when using Mux playback ID only
+
+- `video_provider`
+  - expected values:
+    - `youtube`
+    - `mux`
+    - `external`
+  - can be inferred in some cases from `content_url`
+
+- `mux_playback_id`
+  - used for Mux-hosted videos
+  - allows rendering Mux playback without relying on a generic URL
+
+This allows the platform to support different playback sources without fragmenting the content model.
 
 ---
 
@@ -115,6 +154,10 @@ Important fields:
 - sponsors page
 - featured sponsors section on homepage
 
+### Current admin status
+- public sponsor reads are already live
+- admin sponsor CRUD is still pending
+
 ---
 
 ## Current Auth Strategy
@@ -126,7 +169,15 @@ The project currently uses:
 - server-side admin verification
 - email allowlist through environment variables
 
-This means admin capability is already separated from public browsing, even though admin CRUD tables and flows are not yet implemented.
+This means admin capability is already separated from public browsing.
+
+### Admin mutation strategy
+Protected write operations currently use:
+- server-side actions
+- server-only Supabase admin client
+- elevated key stored in server environment variables only
+
+This allows safe admin writes without exposing privileged keys to the browser.
 
 ---
 
@@ -155,6 +206,14 @@ The current sponsor levels are:
 
 For the MVP, a simple enum is enough.
 
+### Video providers
+The current video strategy supports:
+- youtube
+- mux
+- external
+
+This is currently modeled in a simple way and can later evolve if richer media workflows are needed.
+
 ---
 
 ## Why This Model
@@ -164,6 +223,7 @@ This structure supports the current frontend already built:
 - dynamic content detail page
 - sponsors page
 - featured sponsors section
+- provider-aware video behavior
 
 It also keeps the migration path simple:
 - keep the UI structure
@@ -177,11 +237,15 @@ The project has already completed the public migration for:
 - content
 - sponsors
 
+The project has also completed the initial admin write flow for:
+- content creation
+
 The current pending backend work is focused on:
-- admin CRUD flows
-- publication workflows
+- content editing
+- publish/unpublish workflows
 - sponsor management workflows
-- richer media behavior
+- richer media handling
+- possible future asset workflows for uploads
 
 ---
 
@@ -195,5 +259,11 @@ Possible future entities:
 - categories table
 - tags table
 - content_tags join table
+
+Possible future content enhancements:
+- separate media asset table
+- richer editorial fields for cultura content
+- explicit publication history
+- video upload workflows for Mux-managed assets
 
 These are intentionally not part of the current MVP schema.

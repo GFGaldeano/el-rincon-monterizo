@@ -99,11 +99,13 @@
 - [x] create initial admin dashboard
 
 ## Phase 11 - Admin Content Management
-- [ ] create admin content list page
-- [ ] create content creation form
+- [x] create admin content list page
+- [x] create content creation form
 - [ ] create content edit flow
 - [ ] create publish/unpublish flow
-- [ ] persist content creation in Supabase
+- [x] persist content creation in Supabase
+- [x] create protected `/admin/content/new`
+- [x] connect admin dashboard to content module
 
 ## Phase 12 - Admin Sponsors Management
 - [ ] create admin sponsors list page
@@ -111,13 +113,16 @@
 - [ ] create sponsor edit flow
 - [ ] create sponsor activate/deactivate flow
 - [ ] persist sponsor management in Supabase
+- [x] create placeholder `/admin/sponsors`
 
 ## Phase 13 - Media and Experience
-- [ ] define real video playback experience
 - [ ] define real library/document reading experience
 - [ ] define culture/editorial reading experience
-- [ ] prepare media integration with Mux
-- [ ] define content detail actions with real behavior
+- [ ] prepare full media integration with Mux upload/management
+- [x] support video playback from `contentUrl`
+- [x] support YouTube embedded playback
+- [x] prepare Mux playback through `mux_playback_id`
+- [x] define content detail actions with real initial behavior
 
 ## Phase 14 - Production Readiness
 - [ ] SEO basics

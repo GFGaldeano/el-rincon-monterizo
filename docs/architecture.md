@@ -1,3 +1,9 @@
+
+---
+
+## `docs/architecture.md`
+
+```md
 # Architecture
 
 ## Project Name
@@ -33,6 +39,9 @@ The project currently includes:
 - admin authentication flow
 - protected admin routes
 - initial admin dashboard
+- admin content listing
+- admin content creation flow with real persistence
+- video playback by provider strategy
 
 ## Out of Scope for Current MVP
 The following are not part of the current MVP unless explicitly approved:
@@ -42,7 +51,7 @@ The following are not part of the current MVP unless explicitly approved:
 - social network features
 - AI recommendation engines
 - marketplace logic
-- complex admin workflows in this current phase
+- complex admin workflows beyond the current scope
 
 ## High-Level Technical Structure
 
@@ -62,8 +71,10 @@ The following are not part of the current MVP unless explicitly approved:
 - protected admin routes using Proxy
 - admin allowlist based on email
 
-### Planned Video Layer
-- Mux
+### Video Strategy
+- YouTube embedded playback
+- Mux-ready playback through `mux_playback_id`
+- external playback through `contentUrl`
 
 ### Planned Deployment
 - Vercel
@@ -74,7 +85,10 @@ The following are not part of the current MVP unless explicitly approved:
 src/
   app/
     admin/
+      content/
+        new/
       login/
+      sponsors/
     biblioteca/
     contenido/
       [id]/
@@ -91,7 +105,9 @@ src/
   constants/
   features/
     admin/
+      actions/
       components/
+        content/
     content/
       components/
         detail/
@@ -102,6 +118,7 @@ src/
   hooks/
   lib/
     supabase/
+      admin.ts
       client.ts
       proxy.ts
       server.ts

@@ -1,3 +1,7 @@
+
+## `database/schema.sql`
+
+```sql
 -- =========================================================
 -- El Rincón Monterizo - Initial MVP Schema
 -- PostgreSQL / Supabase-ready
@@ -19,6 +23,12 @@ create type sponsor_level as enum (
   'plata',
   'bronce',
   'destacado'
+);
+
+create type video_provider_type as enum (
+  'youtube',
+  'mux',
+  'external'
 );
 
 -- ---------------------------------------------------------
@@ -52,6 +62,8 @@ create table if not exists public.content (
   format text,
   duration_seconds integer,
   page_count integer,
+  video_provider video_provider_type,
+  mux_playback_id text,
   is_featured boolean not null default false,
   is_published boolean not null default false,
   published_at timestamptz,
@@ -61,10 +73,29 @@ create table if not exists public.content (
 
   constraint content_title_not_blank check (char_length(trim(title)) > 0),
   constraint content_slug_not_blank check (char_length(trim(slug)) > 0),
-  constraint content_author_name_not_blank check (char_length(trim(author_name)) > 0)
+  constraint content_author_name_not_blank check (char_length(trim(author_name)) > 0),
+  constraint content_duration_seconds_non_negative check (
+    duration_seconds is null or duration_seconds >= 0
+  ),
+  constraint content_page_count_non_negative check (
+    page_count is null or page_count >= 0
+  ),
+  constraint content_display_order_non_negative check (
+    display_order >= 0
+  ),
+  constraint content_mux_playback_id_not_blank check (
+    mux_playback_id is null or char_length(trim(mux_playback_id)) > 0
+  ),
+  constraint content_video_provider_mux_requires_playback_id check (
+    video_provider is distinct from 'mux' or mux_playback_id is not null
+  ),
+  constraint content_video_provider_non_mux_requires_url check (
+    video_provider not in ('youtube', 'external') or content_url is not null
+  )
 );
 
 create index if not exists idx_content_category on public.content(category);
+create index if not exists idx_content_video_provider on public.content(video_provider);
 create index if not exists idx_content_is_featured on public.content(is_featured);
 create index if not exists idx_content_is_published on public.content(is_published);
 create index if not exists idx_content_display_order on public.content(display_order);
@@ -99,7 +130,10 @@ create table if not exists public.sponsors (
   constraint sponsors_name_not_blank check (char_length(trim(name)) > 0),
   constraint sponsors_slug_not_blank check (char_length(trim(slug)) > 0),
   constraint sponsors_city_not_blank check (char_length(trim(city)) > 0),
-  constraint sponsors_business_category_not_blank check (char_length(trim(business_category)) > 0)
+  constraint sponsors_business_category_not_blank check (char_length(trim(business_category)) > 0),
+  constraint sponsors_display_order_non_negative check (
+    display_order >= 0
+  )
 );
 
 create index if not exists idx_sponsors_level on public.sponsors(level);
@@ -117,3 +151,6 @@ execute function set_updated_at();
 -- ---------------------------------------------------------
 -- This schema is intentionally simple for the MVP.
 -- Future admin/auth/publication workflows can extend it.
+-- If your current project already exists and you previously created the
+-- tables without `video_provider` or `mux_playback_id`, apply a migration
+-- instead of recreating the schema from scratch.

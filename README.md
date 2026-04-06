@@ -51,24 +51,42 @@ La visión de **El Rincón Monterizo** es convertirse en un espacio digital de r
 
 ## 🚀 Estado actual del proyecto
 
-Actualmente el proyecto se encuentra en su **fase inicial de setup y arquitectura base**, con una primera estructura creada sobre Next.js.
+Actualmente el proyecto ya superó la etapa inicial de setup y cuenta con una base funcional de frontend, backend y administración.
 
 ### ✅ Ya implementado
+
 - inicialización del proyecto con Next.js
 - configuración de TypeScript
 - integración de Tailwind CSS
 - configuración de ESLint
-- estructura base de carpetas
-- archivos de documentación inicial del proyecto
+- integración de shadcn/ui
+- layout base con header y footer
+- navegación pública principal
+- catálogo público de contenidos
+- detalle dinámico de contenido por categoría
+- integración con Supabase
+- lectura real de contenidos desde base de datos
+- lectura real de sponsors desde base de datos
+- esquema SQL inicial del MVP documentado en `database/schema.sql`
+- autenticación admin con Supabase Auth
+- rutas protegidas para administración
+- dashboard admin inicial
+- listado admin de contenidos
+- alta de contenidos desde panel admin con persistencia real en Supabase
+- base preparada para gestión administrativa de sponsors
+- soporte de reproducción según proveedor de video:
+  - YouTube embebido
+  - Mux preparado mediante `mux_playback_id`
+  - enlaces externos mediante `contentUrl`
 
 ### 🛠️ Próximamente
-- integración de UI components
-- conexión con base de datos
-- módulo de contenidos
-- módulo de publicidad local
-- panel administrativo
-- reproductor de videos on-demand
-- biblioteca digital
+
+- edición de contenidos desde panel admin
+- alta y edición completa de sponsors desde panel admin
+- publicación / despublicación desde administración
+- experiencia más rica de lectura para documentos
+- mejora de reproducción audiovisual y media workflows
+- endurecimiento para producción
 
 ---
 
@@ -84,6 +102,7 @@ Framework principal para construir la aplicación web.
 - routing moderno con App Router
 - estructura escalable para páginas y layouts
 - server components y client components
+- server actions
 - optimización general del rendimiento
 
 ---
@@ -95,6 +114,7 @@ Librería base sobre la que se apoya Next.js para construir interfaces.
 - creación de componentes reutilizables
 - composición de la UI
 - manejo declarativo de vistas
+- formularios y estados del panel admin
 
 ---
 
@@ -120,6 +140,16 @@ Framework utility-first para estilos.
 
 ---
 
+### 🧩 shadcn/ui
+Sistema de componentes reutilizables para React.
+
+**¿Para qué se usa?**
+- acelerar el desarrollo del frontend
+- crear interfaces limpias y consistentes
+- mejorar la experiencia visual del producto
+
+---
+
 ### 🧹 ESLint
 Herramienta de análisis estático de código.
 
@@ -131,53 +161,42 @@ Herramienta de análisis estático de código.
 
 ---
 
-## 🧩 Tecnologías planificadas para el proyecto
-
-> Estas tecnologías forman parte de la arquitectura prevista del producto, aunque algunas todavía no están integradas en esta etapa inicial.
-
 ### 🗄️ Supabase
 Backend as a Service basado en PostgreSQL.
 
-**Se planea usar para:**
-- autenticación
-- base de datos relacional
-- almacenamiento de archivos
-- políticas de acceso
-- backend rápido para MVP
+**¿Para qué se usa hoy?**
+- autenticación admin
+- lectura pública de contenidos
+- lectura pública de sponsors
+- escritura administrativa de contenidos
+- base de datos relacional del proyecto
 
 ---
 
 ### 🐘 PostgreSQL
 Base de datos relacional robusta y escalable.
 
-**Se planea usar para:**
+**¿Para qué se usa hoy?**
 - gestión de contenidos
-- usuarios
-- anuncios
-- categorías
-- métricas
-- relaciones entre módulos
+- sponsors
+- publicación
+- orden de visualización
+- metadata de recursos
+- soporte de reproducción por proveedor de video
 
 ---
 
 ### 🎬 Mux
 Plataforma de video para contenido on-demand.
 
-**Se planea usar para:**
-- subida y procesamiento de videos
+**Estado actual**
+- ya contemplado en el modelo del proyecto
+- soporte preparado mediante `mux_playback_id` para reproducción
+
+**¿Para qué se usará?**
 - reproducción optimizada
 - entrega eficiente de contenido audiovisual
-- evitar construir una infraestructura de video compleja desde cero
-
----
-
-### 🧩 shadcn/ui
-Sistema de componentes reutilizables para React.
-
-**Se planea usar para:**
-- acelerar el desarrollo del frontend
-- crear interfaces limpias y consistentes
-- mejorar la experiencia visual del producto
+- futura gestión de video más profesional
 
 ---
 
@@ -191,15 +210,19 @@ Plataforma de despliegue recomendada para aplicaciones Next.js.
 
 ---
 
-## 🏗️ Arquitectura inicial del proyecto
+## 🏗️ Arquitectura base del proyecto
 
 ```bash
 el-rincon-monterizo/
+├── database/               # SQL y estructura inicial del modelo
+│   └── schema.sql
 ├── docs/                   # Documentación interna del proyecto
 │   ├── architecture.md
 │   ├── coding-standards.md
+│   ├── data-model.md
 │   ├── product-rules.md
-│   └── roadmap.md
+│   ├── roadmap.md
+│   └── skills/
 ├── public/                 # Recursos públicos estáticos
 ├── src/
 │   ├── app/                # Rutas, páginas, layouts (App Router)
@@ -207,36 +230,10 @@ el-rincon-monterizo/
 │   ├── constants/          # Constantes globales
 │   ├── features/           # Módulos funcionales del negocio
 │   ├── hooks/              # Hooks personalizados
-│   ├── lib/                # Utilidades y helpers
-│   ├── services/           # Servicios y lógica de acceso externo
+│   ├── lib/                # Utilidades, auth, Supabase y helpers
+│   ├── services/           # Servicios y lógica server-side
 │   └── types/              # Tipos globales de TypeScript
 ├── AGENTS.md               # Reglas/contexto para agentes
 ├── CLAUDE.md               # Archivo de apoyo para desarrollo asistido
 ├── README.md
 └── package.json
-```
----
-
-### 🔄 Estado actual del desarrollo
-
-Actualmente el proyecto ya cuenta con:
-
-- estructura base en Next.js App Router
-- UI inicial responsive con Tailwind CSS y shadcn/ui
-- layout principal con header y footer
-- catálogo público de contenidos
-- detalle dinámico de contenido por categoría
-- integración con Supabase
-- lectura real de contenidos desde base de datos
-- lectura real de sponsors desde base de datos
-- esquema SQL inicial del MVP documentado en `database/schema.sql`
-- autenticación admin con Supabase Auth
-- rutas protegidas para administración
-- dashboard admin inicial
-
-El proyecto continúa avanzando hacia:
-- alta y edición de contenidos desde panel admin
-- alta y edición de sponsors desde panel admin
-- reproducción real de video
-- experiencia de lectura/documentos
-- endurecimiento para producción
