@@ -37,19 +37,20 @@ function formatDuration(durationSeconds: number | null): string | undefined {
 }
 
 function mapContentRecord(record: ContentRecord): ContentItem {
-  return {
-    id: record.id,
-    title: record.title,
-    description: record.description,
-    category: record.category,
-    author: record.author_name,
-    imageUrl: record.cover_image_url ?? fallbackImageUrl,
-    featured: record.is_featured,
-    duration: formatDuration(record.duration_seconds),
-    format: record.format ?? undefined,
-    pages: record.page_count ?? undefined,
-    organization: record.organization_name ?? undefined,
-  };
+return {
+  id: record.id,
+  title: record.title,
+  description: record.description,
+  category: record.category,
+  author: record.author_name,
+  imageUrl: record.cover_image_url ?? fallbackImageUrl,
+  featured: record.is_featured,
+  duration: formatDuration(record.duration_seconds),
+  format: record.format ?? undefined,
+  pages: record.page_count ?? undefined,
+  organization: record.organization_name ?? undefined,
+  contentUrl: record.content_url ?? undefined,
+};
 }
 
 export async function getPublishedLibraryContent(): Promise<{

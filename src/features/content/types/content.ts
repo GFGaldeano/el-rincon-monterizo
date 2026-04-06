@@ -16,4 +16,5 @@ export type ContentItem = {
   format?: string;
   pages?: number;
   organization?: string;
+  contentUrl?: string;
 };

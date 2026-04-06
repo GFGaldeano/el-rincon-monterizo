@@ -20,14 +20,18 @@ export function VideoDetailPanel({ item }: VideoDetailPanelProps) {
       <CardContent className="space-y-6">
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="rounded-2xl bg-zinc-950/70 p-4">
-            <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">Duración</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
+              Duración
+            </p>
             <p className="mt-2 text-sm font-medium text-zinc-200">
               {item.duration ?? "Próximamente"}
             </p>
           </div>
 
           <div className="rounded-2xl bg-zinc-950/70 p-4">
-            <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">Formato</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
+              Formato
+            </p>
             <p className="mt-2 text-sm font-medium text-zinc-200">
               {item.format ?? "Video"}
             </p>
@@ -42,11 +46,32 @@ export function VideoDetailPanel({ item }: VideoDetailPanelProps) {
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <Button className="bg-amber-400 text-zinc-950 hover:bg-amber-300">
-            Reproducir video
-          </Button>
+          {item.contentUrl ? (
+            <Button
+              asChild
+              className="bg-amber-400 text-zinc-950 hover:bg-amber-300"
+            >
+              <a href={item.contentUrl} target="_blank" rel="noreferrer">
+                Reproducir video
+              </a>
+            </Button>
+          ) : (
+            <Button
+              disabled
+              className="bg-amber-400 text-zinc-950 hover:bg-amber-300"
+            >
+              Reproducir video
+            </Button>
+          )}
+
           <Button variant="outline">Guardar para después</Button>
         </div>
+
+        {!item.contentUrl ? (
+          <p className="text-sm text-zinc-500">
+            Este video todavía no tiene una URL de reproducción configurada.
+          </p>
+        ) : null}
       </CardContent>
     </Card>
   );
