@@ -36,6 +36,32 @@ function slugify(value: string) {
     .replace(/-+/g, "-");
 }
 
+function toNullableVideoProvider(value: FormDataEntryValue | null) {
+  const normalized = typeof value === "string" ? value.trim() : "";
+
+  if (!normalized) return null;
+
+  if (
+    normalized === "youtube" ||
+    normalized === "mux" ||
+    normalized === "external"
+  ) {
+    return normalized;
+  }
+
+  return null;
+}
+
+function inferVideoProviderFromUrl(url: string | null) {
+  if (!url) return null;
+
+  if (url.includes("youtube.com") || url.includes("youtu.be")) {
+    return "youtube";
+  }
+
+  return "external";
+}
+
 export async function createContentAction(formData: FormData) {
   const supabase = await createClient();
 
@@ -64,6 +90,32 @@ export async function createContentAction(formData: FormData) {
 
   const adminClient = createAdminClient();
 
+  const contentUrl = toNullableString(formData.get("contentUrl"));
+  const muxPlaybackId = toNullableString(formData.get("muxPlaybackId"));
+
+  const explicitVideoProvider = toNullableVideoProvider(
+    formData.get("videoProvider"),
+  );
+
+  const videoProvider =
+    category === "video"
+      ? (explicitVideoProvider ?? inferVideoProviderFromUrl(contentUrl))
+      : null;
+
+  if (category === "video" && videoProvider === "mux" && !muxPlaybackId) {
+    throw new Error("Para videos Mux, el playback ID es obligatorio.");
+  }
+
+  if (
+    category === "video" &&
+    (videoProvider === "youtube" || videoProvider === "external") &&
+    !contentUrl
+  ) {
+    throw new Error(
+      "Para videos YouTube o externos, la URL del contenido es obligatoria.",
+    );
+  }
+
   const { error } = await adminClient.from("content").insert({
     slug,
     title,
@@ -72,7 +124,9 @@ export async function createContentAction(formData: FormData) {
     author_name: authorName,
     organization_name: toNullableString(formData.get("organizationName")),
     cover_image_url: toNullableString(formData.get("coverImageUrl")),
-    content_url: toNullableString(formData.get("contentUrl")),
+    content_url: contentUrl,
+    video_provider: videoProvider,
+    mux_playback_id: muxPlaybackId,
     format: toNullableString(formData.get("format")),
     duration_seconds: toNullableNumber(formData.get("durationSeconds")),
     page_count: toNullableNumber(formData.get("pageCount")),

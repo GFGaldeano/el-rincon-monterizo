@@ -4,6 +4,8 @@ export type ContentCategory =
   | "cultura"
   | "documento";
 
+export type VideoProvider = "youtube" | "mux" | "external";
+
 export type ContentItem = {
   id: string;
   title: string;
@@ -17,4 +19,6 @@ export type ContentItem = {
   pages?: number;
   organization?: string;
   contentUrl?: string;
+  videoProvider?: VideoProvider;
+  muxPlaybackId?: string;
 };

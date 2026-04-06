@@ -27,7 +27,7 @@ export function CreateContentForm() {
         };
       }
     },
-    initialState
+    initialState,
   );
 
   return (
@@ -39,7 +39,10 @@ export function CreateContentForm() {
       <CardContent>
         <form action={formAction} className="grid gap-5">
           <div className="grid gap-2">
-            <label htmlFor="title" className="text-sm font-medium text-zinc-300">
+            <label
+              htmlFor="title"
+              className="text-sm font-medium text-zinc-300"
+            >
               Título *
             </label>
             <Input
@@ -63,7 +66,10 @@ export function CreateContentForm() {
           </div>
 
           <div className="grid gap-2">
-            <label htmlFor="description" className="text-sm font-medium text-zinc-300">
+            <label
+              htmlFor="description"
+              className="text-sm font-medium text-zinc-300"
+            >
               Descripción *
             </label>
             <Textarea
@@ -77,7 +83,10 @@ export function CreateContentForm() {
 
           <div className="grid gap-5 md:grid-cols-2">
             <div className="grid gap-2">
-              <label htmlFor="category" className="text-sm font-medium text-zinc-300">
+              <label
+                htmlFor="category"
+                className="text-sm font-medium text-zinc-300"
+              >
                 Categoría *
               </label>
               <select
@@ -95,7 +104,10 @@ export function CreateContentForm() {
             </div>
 
             <div className="grid gap-2">
-              <label htmlFor="authorName" className="text-sm font-medium text-zinc-300">
+              <label
+                htmlFor="authorName"
+                className="text-sm font-medium text-zinc-300"
+              >
                 Autor *
               </label>
               <Input
@@ -123,7 +135,10 @@ export function CreateContentForm() {
             </div>
 
             <div className="grid gap-2">
-              <label htmlFor="format" className="text-sm font-medium text-zinc-300">
+              <label
+                htmlFor="format"
+                className="text-sm font-medium text-zinc-300"
+              >
                 Formato
               </label>
               <Input
@@ -151,12 +166,52 @@ export function CreateContentForm() {
             </div>
 
             <div className="grid gap-2">
-              <label htmlFor="contentUrl" className="text-sm font-medium text-zinc-300">
+              <label
+                htmlFor="contentUrl"
+                className="text-sm font-medium text-zinc-300"
+              >
                 Content URL
               </label>
               <Input
                 id="contentUrl"
                 name="contentUrl"
+                className="border-white/10 bg-zinc-950 text-white"
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-2">
+            <div className="grid gap-2">
+              <label
+                htmlFor="videoProvider"
+                className="text-sm font-medium text-zinc-300"
+              >
+                Proveedor de video
+              </label>
+              <select
+                id="videoProvider"
+                name="videoProvider"
+                defaultValue=""
+                className="h-10 rounded-md border border-white/10 bg-zinc-950 px-3 text-white"
+              >
+                <option value="">Auto / ninguno</option>
+                <option value="youtube">YouTube</option>
+                <option value="mux">Mux</option>
+                <option value="external">Externo</option>
+              </select>
+            </div>
+
+            <div className="grid gap-2">
+              <label
+                htmlFor="muxPlaybackId"
+                className="text-sm font-medium text-zinc-300"
+              >
+                Mux playback ID
+              </label>
+              <Input
+                id="muxPlaybackId"
+                name="muxPlaybackId"
+                placeholder="solo para videos Mux"
                 className="border-white/10 bg-zinc-950 text-white"
               />
             </div>
@@ -181,7 +236,10 @@ export function CreateContentForm() {
             </div>
 
             <div className="grid gap-2">
-              <label htmlFor="pageCount" className="text-sm font-medium text-zinc-300">
+              <label
+                htmlFor="pageCount"
+                className="text-sm font-medium text-zinc-300"
+              >
                 Páginas
               </label>
               <Input

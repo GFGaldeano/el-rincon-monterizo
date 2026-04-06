@@ -24,6 +24,8 @@ type ContentRecord = {
   is_published: boolean;
   published_at: string | null;
   display_order: number;
+  video_provider: "youtube" | "mux" | "external" | null;
+  mux_playback_id: string | null;
 };
 
 const fallbackImageUrl =
@@ -50,6 +52,8 @@ return {
   pages: record.page_count ?? undefined,
   organization: record.organization_name ?? undefined,
   contentUrl: record.content_url ?? undefined,
+  videoProvider: record.video_provider ?? undefined,
+  muxPlaybackId: record.mux_playback_id ?? undefined,
 };
 }
 
@@ -78,7 +82,9 @@ export async function getPublishedLibraryContent(): Promise<{
         is_featured,
         is_published,
         published_at,
-        display_order
+        display_order,
+        video_provider,
+        mux_playback_id
       `
     )
     .in("category", ["biblioteca", "documento"])
@@ -122,7 +128,9 @@ export async function getPublishedContentById(
         is_featured,
         is_published,
         published_at,
-        display_order
+        display_order,
+        video_provider,
+        mux_playback_id
       `
     )
     .eq("id", id)
@@ -162,7 +170,9 @@ export async function getRelatedPublishedContent(
         is_featured,
         is_published,
         published_at,
-        display_order
+        display_order,
+        video_provider,
+        mux_playback_id
       `
     )
     .eq("category", category)
@@ -204,7 +214,9 @@ export async function getFeaturedPublishedContent(limit = 3): Promise<{
         is_featured,
         is_published,
         published_at,
-        display_order
+        display_order,
+        video_provider,
+        mux_playback_id
       `
     )
     .eq("is_published", true)
@@ -250,7 +262,9 @@ export async function getPublishedVideoContent(): Promise<{
         is_featured,
         is_published,
         published_at,
-        display_order
+        display_order,
+        video_provider,
+        mux_playback_id
       `
     )
     .eq("category", "video")
@@ -295,7 +309,9 @@ export async function getPublishedCultureContent(): Promise<{
         is_featured,
         is_published,
         published_at,
-        display_order
+        display_order,
+        video_provider,
+        mux_playback_id
       `
     )
     .eq("category", "cultura")
