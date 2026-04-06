@@ -39,8 +39,11 @@ export function CreateContentForm() {
       <CardContent>
         <form action={formAction} className="grid gap-5">
           <div className="grid gap-2">
-            <label className="text-sm font-medium text-zinc-300">Título *</label>
+            <label htmlFor="title" className="text-sm font-medium text-zinc-300">
+              Título *
+            </label>
             <Input
+              id="title"
               name="title"
               required
               className="border-white/10 bg-zinc-950 text-white placeholder:text-zinc-500"
@@ -48,8 +51,11 @@ export function CreateContentForm() {
           </div>
 
           <div className="grid gap-2">
-            <label className="text-sm font-medium text-zinc-300">Slug</label>
+            <label htmlFor="slug" className="text-sm font-medium text-zinc-300">
+              Slug
+            </label>
             <Input
+              id="slug"
               name="slug"
               placeholder="opcional-se-genera-automaticamente"
               className="border-white/10 bg-zinc-950 text-white placeholder:text-zinc-500"
@@ -57,8 +63,11 @@ export function CreateContentForm() {
           </div>
 
           <div className="grid gap-2">
-            <label className="text-sm font-medium text-zinc-300">Descripción *</label>
+            <label htmlFor="description" className="text-sm font-medium text-zinc-300">
+              Descripción *
+            </label>
             <Textarea
+              id="description"
               name="description"
               required
               rows={5}
@@ -68,12 +77,15 @@ export function CreateContentForm() {
 
           <div className="grid gap-5 md:grid-cols-2">
             <div className="grid gap-2">
-              <label className="text-sm font-medium text-zinc-300">Categoría *</label>
+              <label htmlFor="category" className="text-sm font-medium text-zinc-300">
+                Categoría *
+              </label>
               <select
+                id="category"
                 name="category"
                 required
-                className="h-10 rounded-md border border-white/10 bg-zinc-950 px-3 text-white"
                 defaultValue="biblioteca"
+                className="h-10 rounded-md border border-white/10 bg-zinc-950 px-3 text-white"
               >
                 <option value="biblioteca">Biblioteca</option>
                 <option value="documento">Documento</option>
@@ -83,8 +95,11 @@ export function CreateContentForm() {
             </div>
 
             <div className="grid gap-2">
-              <label className="text-sm font-medium text-zinc-300">Autor *</label>
+              <label htmlFor="authorName" className="text-sm font-medium text-zinc-300">
+                Autor *
+              </label>
               <Input
+                id="authorName"
                 name="authorName"
                 required
                 className="border-white/10 bg-zinc-950 text-white"
@@ -94,16 +109,25 @@ export function CreateContentForm() {
 
           <div className="grid gap-5 md:grid-cols-2">
             <div className="grid gap-2">
-              <label className="text-sm font-medium text-zinc-300">Organización</label>
+              <label
+                htmlFor="organizationName"
+                className="text-sm font-medium text-zinc-300"
+              >
+                Organización
+              </label>
               <Input
+                id="organizationName"
                 name="organizationName"
                 className="border-white/10 bg-zinc-950 text-white"
               />
             </div>
 
             <div className="grid gap-2">
-              <label className="text-sm font-medium text-zinc-300">Formato</label>
+              <label htmlFor="format" className="text-sm font-medium text-zinc-300">
+                Formato
+              </label>
               <Input
+                id="format"
                 name="format"
                 placeholder="PDF, Video HD, Artículo..."
                 className="border-white/10 bg-zinc-950 text-white"
@@ -113,16 +137,25 @@ export function CreateContentForm() {
 
           <div className="grid gap-5 md:grid-cols-2">
             <div className="grid gap-2">
-              <label className="text-sm font-medium text-zinc-300">Cover image URL</label>
+              <label
+                htmlFor="coverImageUrl"
+                className="text-sm font-medium text-zinc-300"
+              >
+                Cover image URL
+              </label>
               <Input
+                id="coverImageUrl"
                 name="coverImageUrl"
                 className="border-white/10 bg-zinc-950 text-white"
               />
             </div>
 
             <div className="grid gap-2">
-              <label className="text-sm font-medium text-zinc-300">Content URL</label>
+              <label htmlFor="contentUrl" className="text-sm font-medium text-zinc-300">
+                Content URL
+              </label>
               <Input
+                id="contentUrl"
                 name="contentUrl"
                 className="border-white/10 bg-zinc-950 text-white"
               />
@@ -131,33 +164,49 @@ export function CreateContentForm() {
 
           <div className="grid gap-5 md:grid-cols-3">
             <div className="grid gap-2">
-              <label className="text-sm font-medium text-zinc-300">
+              <label
+                htmlFor="durationSeconds"
+                className="text-sm font-medium text-zinc-300"
+              >
                 Duración (segundos)
               </label>
               <Input
+                id="durationSeconds"
                 name="durationSeconds"
                 type="number"
                 min="0"
+                step="1"
                 className="border-white/10 bg-zinc-950 text-white"
               />
             </div>
 
             <div className="grid gap-2">
-              <label className="text-sm font-medium text-zinc-300">Páginas</label>
+              <label htmlFor="pageCount" className="text-sm font-medium text-zinc-300">
+                Páginas
+              </label>
               <Input
+                id="pageCount"
                 name="pageCount"
                 type="number"
                 min="0"
+                step="1"
                 className="border-white/10 bg-zinc-950 text-white"
               />
             </div>
 
             <div className="grid gap-2">
-              <label className="text-sm font-medium text-zinc-300">Orden</label>
+              <label
+                htmlFor="displayOrder"
+                className="text-sm font-medium text-zinc-300"
+              >
+                Orden
+              </label>
               <Input
+                id="displayOrder"
                 name="displayOrder"
                 type="number"
                 min="0"
+                step="1"
                 defaultValue="0"
                 className="border-white/10 bg-zinc-950 text-white"
               />
@@ -165,13 +214,29 @@ export function CreateContentForm() {
           </div>
 
           <div className="flex flex-wrap gap-6 pt-2">
-            <label className="flex items-center gap-2 text-sm text-zinc-300">
-              <input type="checkbox" name="isFeatured" />
+            <label
+              htmlFor="isFeatured"
+              className="flex items-center gap-2 text-sm text-zinc-300"
+            >
+              <input
+                id="isFeatured"
+                type="checkbox"
+                name="isFeatured"
+                className="h-4 w-4 rounded border-white/20 bg-zinc-950 accent-amber-400"
+              />
               Destacado
             </label>
 
-            <label className="flex items-center gap-2 text-sm text-zinc-300">
-              <input type="checkbox" name="isPublished" />
+            <label
+              htmlFor="isPublished"
+              className="flex items-center gap-2 text-sm text-zinc-300"
+            >
+              <input
+                id="isPublished"
+                type="checkbox"
+                name="isPublished"
+                className="h-4 w-4 rounded border-white/20 bg-zinc-950 accent-amber-400"
+              />
               Publicado
             </label>
           </div>
