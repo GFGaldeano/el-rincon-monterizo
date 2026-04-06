@@ -1,9 +1,3 @@
-
----
-
-## `docs/roadmap.md`
-
-```md
 # Roadmap
 
 ## Phase 1 - Foundation
@@ -27,6 +21,7 @@
 - [x] create initial homepage
 - [x] define initial visual direction
 - [x] create responsive homepage
+- [x] add mobile navigation with hamburger menu
 
 ## Phase 3 - Public Navigation
 - [x] create `/biblioteca`
@@ -127,7 +122,8 @@
 ## Phase 14 - Production Readiness
 - [ ] SEO basics
 - [ ] performance review
-- [ ] deployment configuration
-- [ ] production environment variables
+- [x] deployment configuration
+- [x] initial public deployment on Vercel
+- [ ] production environment variables hardening
 - [ ] analytics strategy
 - [ ] final QA pass

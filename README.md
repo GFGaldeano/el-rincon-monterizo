@@ -78,6 +78,18 @@ Actualmente el proyecto ya superó la etapa inicial de setup y cuenta con una ba
   - YouTube embebido
   - Mux preparado mediante `mux_playback_id`
   - enlaces externos mediante `contentUrl`
+- menú hamburguesa responsive para mobile
+- deploy inicial en Vercel operativo
+- URL pública de prueba disponible
+
+### 🌐 Deploy de prueba
+
+El proyecto ya cuenta con un deploy funcional en Vercel para pruebas iniciales:
+
+**URL pública:**  
+`https://el-rincon-monterizo-7x5n.vercel.app/`
+
+> Esta URL puede cambiar si más adelante se configura un dominio personalizado o se ajusta la estrategia de entornos.
 
 ### 🛠️ Próximamente
 
