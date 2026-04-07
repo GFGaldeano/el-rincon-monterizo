@@ -62,7 +62,7 @@ function inferVideoProviderFromUrl(url: string | null) {
   return "external";
 }
 
-export async function createContentAction(formData: FormData) {
+async function requireAdminEmail() {
   const supabase = await createClient();
 
   const { data: claimsData } = await supabase.auth.getClaims();
@@ -76,6 +76,10 @@ export async function createContentAction(formData: FormData) {
     throw new Error("Unauthorized");
   }
 
+  return email;
+}
+
+function buildContentPayload(formData: FormData) {
   const title = String(formData.get("title") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();
   const category = String(formData.get("category") ?? "").trim();
@@ -88,18 +92,16 @@ export async function createContentAction(formData: FormData) {
   const rawSlug = String(formData.get("slug") ?? "").trim();
   const slug = rawSlug ? slugify(rawSlug) : slugify(title);
 
-  const adminClient = createAdminClient();
-
   const contentUrl = toNullableString(formData.get("contentUrl"));
   const muxPlaybackId = toNullableString(formData.get("muxPlaybackId"));
 
   const explicitVideoProvider = toNullableVideoProvider(
-    formData.get("videoProvider"),
+    formData.get("videoProvider")
   );
 
   const videoProvider =
     category === "video"
-      ? (explicitVideoProvider ?? inferVideoProviderFromUrl(contentUrl))
+      ? explicitVideoProvider ?? inferVideoProviderFromUrl(contentUrl)
       : null;
 
   if (category === "video" && videoProvider === "mux" && !muxPlaybackId) {
@@ -112,11 +114,15 @@ export async function createContentAction(formData: FormData) {
     !contentUrl
   ) {
     throw new Error(
-      "Para videos YouTube o externos, la URL del contenido es obligatoria.",
+      "Para videos YouTube o externos, la URL del contenido es obligatoria."
     );
   }
 
-  const { error } = await adminClient.from("content").insert({
+  if (category !== "video" && muxPlaybackId) {
+    throw new Error("El playback ID de Mux solo aplica a contenidos tipo video.");
+  }
+
+  return {
     slug,
     title,
     description,
@@ -125,29 +131,80 @@ export async function createContentAction(formData: FormData) {
     organization_name: toNullableString(formData.get("organizationName")),
     cover_image_url: toNullableString(formData.get("coverImageUrl")),
     content_url: contentUrl,
-    video_provider: videoProvider,
-    mux_playback_id: muxPlaybackId,
     format: toNullableString(formData.get("format")),
     duration_seconds: toNullableNumber(formData.get("durationSeconds")),
     page_count: toNullableNumber(formData.get("pageCount")),
+    video_provider: videoProvider,
+    mux_playback_id: muxPlaybackId,
     is_featured: toBoolean(formData.get("isFeatured")),
     is_published: toBoolean(formData.get("isPublished")),
-    published_at: toBoolean(formData.get("isPublished"))
-      ? new Date().toISOString()
-      : null,
     display_order: toNullableNumber(formData.get("displayOrder")) ?? 0,
+  };
+}
+
+function revalidateContentPaths() {
+  revalidatePath("/");
+  revalidatePath("/biblioteca");
+  revalidatePath("/videos");
+  revalidatePath("/cultura");
+  revalidatePath("/sponsors");
+  revalidatePath("/admin");
+  revalidatePath("/admin/content");
+  revalidatePath("/contenido");
+}
+
+export async function createContentAction(formData: FormData) {
+  await requireAdminEmail();
+
+  const payload = buildContentPayload(formData);
+  const adminClient = createAdminClient();
+
+  const { error } = await adminClient.from("content").insert({
+    ...payload,
+    published_at: payload.is_published ? new Date().toISOString() : null,
   });
 
   if (error) {
     throw new Error(error.message);
   }
 
-  revalidatePath("/");
-  revalidatePath("/biblioteca");
-  revalidatePath("/videos");
-  revalidatePath("/cultura");
-  revalidatePath("/contenido");
-  revalidatePath("/admin/content");
+  revalidateContentPaths();
+  redirect("/admin/content");
+}
+
+export async function updateContentAction(formData: FormData) {
+  await requireAdminEmail();
+
+  const id = String(formData.get("id") ?? "").trim();
+
+  if (!id) {
+    throw new Error("Missing content id.");
+  }
+
+  const payload = buildContentPayload(formData);
+  const originalPublishedAt = toNullableString(formData.get("originalPublishedAt"));
+
+  const adminClient = createAdminClient();
+
+  const publishedAt = payload.is_published
+    ? originalPublishedAt ?? new Date().toISOString()
+    : null;
+
+  const { error } = await adminClient
+    .from("content")
+    .update({
+      ...payload,
+      published_at: publishedAt,
+    })
+    .eq("id", id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  revalidateContentPaths();
+  revalidatePath(`/contenido/${id}`);
+  revalidatePath(`/admin/content/${id}/edit`);
 
   redirect("/admin/content");
 }

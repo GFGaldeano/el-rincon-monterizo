@@ -40,7 +40,7 @@ export default async function AdminContentPage() {
   const { data, error } = await adminClient
     .from("content")
     .select(
-      "id, title, slug, category, author_name, is_featured, is_published, display_order, created_at"
+      "id, title, slug, category, author_name, is_featured, is_published, display_order, created_at",
     )
     .order("display_order", { ascending: true })
     .order("created_at", { ascending: false });
@@ -63,7 +63,10 @@ export default async function AdminContentPage() {
             </p>
           </div>
 
-          <Button asChild className="bg-amber-400 text-zinc-950 hover:bg-amber-300">
+          <Button
+            asChild
+            className="bg-amber-400 text-zinc-950 hover:bg-amber-300"
+          >
             <Link href="/admin/content/new">Nuevo contenido</Link>
           </Button>
         </div>
@@ -80,7 +83,9 @@ export default async function AdminContentPage() {
               <Card key={row.id} className="border-white/10 bg-zinc-900/70">
                 <CardContent className="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between">
                   <div>
-                    <h2 className="text-lg font-semibold text-white">{row.title}</h2>
+                    <h2 className="text-lg font-semibold text-white">
+                      {row.title}
+                    </h2>
                     <p className="mt-1 text-sm text-zinc-500">
                       {row.category} · {row.author_name} · {row.slug}
                     </p>
@@ -102,6 +107,10 @@ export default async function AdminContentPage() {
                   <div className="flex gap-3">
                     <Button asChild variant="outline">
                       <Link href={`/contenido/${row.id}`}>Ver</Link>
+                    </Button>
+
+                    <Button asChild variant="outline">
+                      <Link href={`/admin/content/${row.id}/edit`}>Editar</Link>
                     </Button>
                   </div>
                 </CardContent>
