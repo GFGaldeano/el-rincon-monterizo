@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
+import Image from "next/image";
+import { useActionState, useState } from "react";
 
 import { updateSponsorAction } from "@/features/admin/actions/sponsor.actions";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,8 @@ const initialState = {
 };
 
 export function EditSponsorForm({ item }: EditSponsorFormProps) {
+  const [logoPreviewUrl, setLogoPreviewUrl] = useState(item.logo_url ?? "");
+
   const [state, formAction, isPending] = useActionState(
     async (_prevState: typeof initialState, formData: FormData) => {
       try {
@@ -152,10 +155,33 @@ export function EditSponsorForm({ item }: EditSponsorFormProps) {
               <Input
                 id="logoUrl"
                 name="logoUrl"
-                defaultValue={item.logo_url ?? ""}
+                value={logoPreviewUrl}
+                onChange={(event) => setLogoPreviewUrl(event.target.value)}
                 className="border-white/10 bg-zinc-950 text-white"
               />
             </div>
+          </div>
+
+          <div className="grid gap-2">
+            <label className="text-sm font-medium text-zinc-300">
+              Vista previa del logo
+            </label>
+
+            {logoPreviewUrl ? (
+              <div className="relative h-20 w-20 overflow-hidden rounded-2xl border border-white/10 bg-white">
+                <Image
+                  src={logoPreviewUrl}
+                  alt="Vista previa del logo"
+                  fill
+                  className="object-cover"
+                  sizes="80px"
+                />
+              </div>
+            ) : (
+              <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-dashed border-white/10 bg-zinc-950 text-xs text-zinc-500">
+                Sin logo
+              </div>
+            )}
           </div>
 
           <div className="grid gap-5 md:grid-cols-3">
