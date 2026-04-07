@@ -7,6 +7,7 @@ export type SponsorItem = {
   category: string;
   city: string;
   websiteUrl?: string;
+  logoUrl?: string;
   level: SponsorLevel;
   featured?: boolean;
 };

@@ -31,6 +31,7 @@ function mapSponsorRecord(record: SponsorRecord): SponsorItem {
     category: record.business_category,
     city: record.city,
     websiteUrl: record.website_url ?? undefined,
+    logoUrl: record.logo_url ?? undefined,
     level: record.level,
     featured: record.is_featured,
   };

@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,9 +34,21 @@ export function SponsorCard({ sponsor }: SponsorCardProps) {
     <Card className="border-white/10 bg-zinc-900/70">
       <CardHeader>
         <div className="flex items-start justify-between gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-800 text-lg font-bold text-white">
-            {sponsor.name.slice(0, 2).toUpperCase()}
-          </div>
+          {sponsor.logoUrl ? (
+            <div className="relative h-12 w-12 overflow-hidden rounded-2xl border border-white/10 bg-white">
+              <Image
+                src={sponsor.logoUrl}
+                alt={`${sponsor.name} logo`}
+                fill
+                className="object-cover"
+                sizes="48px"
+              />
+            </div>
+          ) : (
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-800 text-lg font-bold text-white">
+              {sponsor.name.slice(0, 2).toUpperCase()}
+            </div>
+          )}
 
           <Badge className={levelStyleMap[sponsor.level]}>
             {levelLabelMap[sponsor.level]}
@@ -56,11 +70,7 @@ export function SponsorCard({ sponsor }: SponsorCardProps) {
       <CardFooter>
         {sponsor.websiteUrl ? (
           <Button asChild variant="outline">
-            <a
-              href={sponsor.websiteUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href={sponsor.websiteUrl} target="_blank" rel="noreferrer">
               Visitar sponsor
             </a>
           </Button>
