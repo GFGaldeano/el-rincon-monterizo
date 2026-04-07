@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { isAdminEmail } from "@/lib/admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { TogglePublishButton } from "@/features/admin/components/content/TogglePublishButton";
 
 type AdminContentRow = {
   id: string;
@@ -104,7 +105,7 @@ export default async function AdminContentPage() {
                     </div>
                   </div>
 
-                  <div className="flex gap-3">
+                  <div className="flex flex-wrap gap-3">
                     <Button asChild variant="outline">
                       <Link href={`/contenido/${row.id}`}>Ver</Link>
                     </Button>
@@ -112,6 +113,11 @@ export default async function AdminContentPage() {
                     <Button asChild variant="outline">
                       <Link href={`/admin/content/${row.id}/edit`}>Editar</Link>
                     </Button>
+
+                    <TogglePublishButton
+                      id={row.id}
+                      isPublished={row.is_published}
+                    />
                   </div>
                 </CardContent>
               </Card>

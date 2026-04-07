@@ -208,3 +208,39 @@ export async function updateContentAction(formData: FormData) {
 
   redirect("/admin/content");
 }
+
+export async function togglePublishContentAction(formData: FormData) {
+  await requireAdminEmail();
+
+  const id = String(formData.get("id") ?? "").trim();
+  const nextPublished = String(formData.get("nextPublished") ?? "").trim() === "true";
+
+  if (!id) {
+    throw new Error("Missing content id.");
+  }
+
+  const adminClient = createAdminClient();
+
+  const payload = nextPublished
+    ? {
+        is_published: true,
+        published_at: new Date().toISOString(),
+      }
+    : {
+        is_published: false,
+        published_at: null,
+      };
+
+  const { error } = await adminClient
+    .from("content")
+    .update(payload)
+    .eq("id", id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  revalidateContentPaths();
+  revalidatePath(`/contenido/${id}`);
+  revalidatePath("/admin/content");
+}
