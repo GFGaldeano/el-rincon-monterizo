@@ -62,6 +62,7 @@ Actualmente el proyecto ya superó la etapa inicial de setup y cuenta con una ba
 - integración de shadcn/ui
 - layout base con header y footer
 - navegación pública principal
+- menú hamburguesa responsive para mobile
 - catálogo público de contenidos
 - detalle dinámico de contenido por categoría
 - integración con Supabase
@@ -73,12 +74,15 @@ Actualmente el proyecto ya superó la etapa inicial de setup y cuenta con una ba
 - dashboard admin inicial
 - listado admin de contenidos
 - alta de contenidos desde panel admin con persistencia real en Supabase
-- base preparada para gestión administrativa de sponsors
+- edición de contenidos desde panel admin
+- publish / unpublish desde panel admin
+- CRUD administrativo de sponsors
+- preview visual del logo en formularios de sponsors
+- renderizado del logo real en cards públicas de sponsors
 - soporte de reproducción según proveedor de video:
   - YouTube embebido
   - Mux preparado mediante `mux_playback_id`
   - enlaces externos mediante `contentUrl`
-- menú hamburguesa responsive para mobile
 - deploy inicial en Vercel operativo
 - URL pública de prueba disponible
 
@@ -93,12 +97,11 @@ El proyecto ya cuenta con un deploy funcional en Vercel para pruebas iniciales:
 
 ### 🛠️ Próximamente
 
-- edición de contenidos desde panel admin
-- alta y edición completa de sponsors desde panel admin
-- publicación / despublicación desde administración
-- experiencia más rica de lectura para documentos
-- mejora de reproducción audiovisual y media workflows
+- mejora de experiencia de lectura para documentos
+- refinamiento de workflows administrativos
+- gestión media más avanzada para videos
 - endurecimiento para producción
+- analítica y monitoreo
 
 ---
 
@@ -181,6 +184,7 @@ Backend as a Service basado en PostgreSQL.
 - lectura pública de contenidos
 - lectura pública de sponsors
 - escritura administrativa de contenidos
+- escritura administrativa de sponsors
 - base de datos relacional del proyecto
 
 ---
@@ -192,6 +196,7 @@ Base de datos relacional robusta y escalable.
 - gestión de contenidos
 - sponsors
 - publicación
+- activación y desactivación
 - orden de visualización
 - metadata de recursos
 - soporte de reproducción por proveedor de video
@@ -215,7 +220,10 @@ Plataforma de video para contenido on-demand.
 ### ▲ Vercel
 Plataforma de despliegue recomendada para aplicaciones Next.js.
 
-**Se planea usar para:**
+**Estado actual**
+- deploy inicial ya operativo
+
+**Se usa / se usará para:**
 - deploy del frontend
 - previews automáticas
 - integración fluida con el stack de Next.js

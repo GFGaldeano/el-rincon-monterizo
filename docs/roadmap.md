@@ -1,3 +1,7 @@
+
+## `docs/roadmap.md`
+
+```md id="6r1g29"
 # Roadmap
 
 ## Phase 1 - Foundation
@@ -46,6 +50,7 @@
 - [x] create sponsors page
 - [x] add featured sponsors to UI
 - [x] validate sponsor section as part of business model
+- [x] render real sponsor logos in public cards
 
 ## Phase 6 - Documentation Alignment
 - [x] align architecture doc with implemented modules
@@ -96,19 +101,23 @@
 ## Phase 11 - Admin Content Management
 - [x] create admin content list page
 - [x] create content creation form
-- [ ] create content edit flow
-- [ ] create publish/unpublish flow
+- [x] create content edit flow
+- [x] create publish/unpublish flow
 - [x] persist content creation in Supabase
 - [x] create protected `/admin/content/new`
+- [x] create protected `/admin/content/[id]/edit`
 - [x] connect admin dashboard to content module
 
 ## Phase 12 - Admin Sponsors Management
-- [ ] create admin sponsors list page
-- [ ] create sponsor creation form
-- [ ] create sponsor edit flow
-- [ ] create sponsor activate/deactivate flow
-- [ ] persist sponsor management in Supabase
-- [x] create placeholder `/admin/sponsors`
+- [x] create admin sponsors list page
+- [x] create sponsor creation form
+- [x] create sponsor edit flow
+- [x] create sponsor activate/deactivate flow
+- [x] persist sponsor management in Supabase
+- [x] create protected `/admin/sponsors/new`
+- [x] create protected `/admin/sponsors/[id]/edit`
+- [x] add sponsor logo preview in admin forms
+- [x] add sponsor logo preview in admin list
 
 ## Phase 13 - Media and Experience
 - [ ] define real library/document reading experience
