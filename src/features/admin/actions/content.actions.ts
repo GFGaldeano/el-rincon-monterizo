@@ -169,7 +169,7 @@ export async function createContentAction(formData: FormData) {
   }
 
   revalidateContentPaths();
-  redirect("/admin/content");
+  redirect("/admin/content?success=content-created");
 }
 
 export async function updateContentAction(formData: FormData) {
@@ -206,7 +206,7 @@ export async function updateContentAction(formData: FormData) {
   revalidatePath(`/contenido/${id}`);
   revalidatePath(`/admin/content/${id}/edit`);
 
-  redirect("/admin/content");
+  redirect("/admin/content?success=content-updated");
 }
 
 export async function togglePublishContentAction(formData: FormData) {
@@ -243,6 +243,11 @@ export async function togglePublishContentAction(formData: FormData) {
   revalidateContentPaths();
   revalidatePath(`/contenido/${id}`);
   revalidatePath("/admin/content");
+  redirect(
+  `/admin/content?success=${
+    nextPublished ? "content-published" : "content-unpublished"
+  }`
+);
 }
 
 export async function deleteContentAction(formData: FormData) {
@@ -265,4 +270,5 @@ export async function deleteContentAction(formData: FormData) {
   revalidateContentPaths();
   revalidatePath(`/contenido/${id}`);
   revalidatePath("/admin/content");
+  redirect("/admin/content?success=content-deleted");
 }

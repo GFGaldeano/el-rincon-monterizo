@@ -6,11 +6,11 @@ import { Container } from "@/components/layout/Container";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { DeleteSponsorButton } from "@/features/admin/components/sponsors/DeleteSponsorButton";
 import { ToggleSponsorActiveButton } from "@/features/admin/components/sponsors/ToggleSponsorActiveButton";
 import { isAdminEmail } from "@/lib/admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
-import { DeleteSponsorButton } from "@/features/admin/components/sponsors/DeleteSponsorButton";
 
 type AdminSponsorRow = {
   id: string;
@@ -33,6 +33,7 @@ type AdminSponsorsPageProps = {
     level?: string;
     status?: string;
     featured?: string;
+    success?: string;
   }>;
 };
 
@@ -55,6 +56,23 @@ const featuredOptions = [
   { value: "featured", label: "Destacados" },
   { value: "standard", label: "No destacados" },
 ];
+
+function getSuccessMessage(success?: string) {
+  switch (success) {
+    case "sponsor-created":
+      return "Sponsor creado correctamente.";
+    case "sponsor-updated":
+      return "Sponsor actualizado correctamente.";
+    case "sponsor-activated":
+      return "Sponsor activado correctamente.";
+    case "sponsor-deactivated":
+      return "Sponsor desactivado correctamente.";
+    case "sponsor-deleted":
+      return "Sponsor eliminado correctamente.";
+    default:
+      return null;
+  }
+}
 
 export default async function AdminSponsorsPage({
   searchParams,
@@ -83,6 +101,13 @@ export default async function AdminSponsorsPage({
     resolvedSearchParams.featured.length > 0
       ? resolvedSearchParams.featured
       : "all";
+
+  const success =
+    typeof resolvedSearchParams.success === "string"
+      ? resolvedSearchParams.success
+      : "";
+
+  const successMessage = getSuccessMessage(success);
 
   const supabase = await createClient();
 
@@ -159,6 +184,12 @@ export default async function AdminSponsorsPage({
             <Link href="/admin/sponsors/new">Nuevo sponsor</Link>
           </Button>
         </div>
+
+        {successMessage ? (
+          <div className="mb-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-sm text-emerald-200">
+            {successMessage}
+          </div>
+        ) : null}
 
         <Card className="mb-8 border-white/10 bg-zinc-900/70">
           <CardContent className="p-6">
@@ -322,24 +353,24 @@ export default async function AdminSponsorsPage({
                   </div>
 
                   <div className="flex flex-wrap gap-3">
-  <Button asChild variant="outline">
-    <Link href="/sponsors">Ver público</Link>
-  </Button>
+                    <Button asChild variant="outline">
+                      <Link href="/sponsors">Ver público</Link>
+                    </Button>
 
-  <Button asChild variant="outline">
-    <Link href={`/admin/sponsors/${row.id}/edit`}>Editar</Link>
-  </Button>
+                    <Button asChild variant="outline">
+                      <Link href={`/admin/sponsors/${row.id}/edit`}>Editar</Link>
+                    </Button>
 
-  <ToggleSponsorActiveButton
-    id={row.id}
-    isActive={row.is_active}
-  />
+                    <ToggleSponsorActiveButton
+                      id={row.id}
+                      isActive={row.is_active}
+                    />
 
-  <DeleteSponsorButton
-    id={row.id}
-    name={row.name}
-  />
-</div>
+                    <DeleteSponsorButton
+                      id={row.id}
+                      name={row.name}
+                    />
+                  </div>
                 </CardContent>
               </Card>
             ))}

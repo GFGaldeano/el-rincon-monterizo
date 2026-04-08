@@ -5,11 +5,11 @@ import { Container } from "@/components/layout/Container";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { DeleteContentButton } from "@/features/admin/components/content/DeleteContentButton";
 import { TogglePublishButton } from "@/features/admin/components/content/TogglePublishButton";
 import { isAdminEmail } from "@/lib/admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
-import { DeleteContentButton } from "@/features/admin/components/content/DeleteContentButton";
 
 type AdminContentRow = {
   id: string;
@@ -28,6 +28,7 @@ type AdminContentPageProps = {
     q?: string;
     category?: string;
     status?: string;
+    success?: string;
   }>;
 };
 
@@ -44,6 +45,23 @@ const statusOptions = [
   { value: "published", label: "Publicados" },
   { value: "draft", label: "Borradores" },
 ];
+
+function getSuccessMessage(success?: string) {
+  switch (success) {
+    case "content-created":
+      return "Contenido creado correctamente.";
+    case "content-updated":
+      return "Contenido actualizado correctamente.";
+    case "content-published":
+      return "Contenido publicado correctamente.";
+    case "content-unpublished":
+      return "Contenido despublicado correctamente.";
+    case "content-deleted":
+      return "Contenido eliminado correctamente.";
+    default:
+      return null;
+  }
+}
 
 export default async function AdminContentPage({
   searchParams,
@@ -67,6 +85,13 @@ export default async function AdminContentPage({
       ? resolvedSearchParams.status
       : "all";
 
+  const success =
+    typeof resolvedSearchParams.success === "string"
+      ? resolvedSearchParams.success
+      : "";
+
+  const successMessage = getSuccessMessage(success);
+
   const supabase = await createClient();
 
   const { data: claimsData } = await supabase.auth.getClaims();
@@ -85,7 +110,7 @@ export default async function AdminContentPage({
   let query = adminClient
     .from("content")
     .select(
-      "id, title, slug, category, author_name, is_featured, is_published, display_order, created_at",
+      "id, title, slug, category, author_name, is_featured, is_published, display_order, created_at"
     )
     .order("display_order", { ascending: true })
     .order("created_at", { ascending: false });
@@ -127,13 +152,16 @@ export default async function AdminContentPage({
             </p>
           </div>
 
-          <Button
-            asChild
-            className="bg-amber-400 text-zinc-950 hover:bg-amber-300"
-          >
+          <Button asChild className="bg-amber-400 text-zinc-950 hover:bg-amber-300">
             <Link href="/admin/content/new">Nuevo contenido</Link>
           </Button>
         </div>
+
+        {successMessage ? (
+          <div className="mb-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-sm text-emerald-200">
+            {successMessage}
+          </div>
+        ) : null}
 
         <Card className="mb-8 border-white/10 bg-zinc-900/70">
           <CardContent className="p-6">
@@ -268,7 +296,10 @@ export default async function AdminContentPage({
                       isPublished={row.is_published}
                     />
 
-                    <DeleteContentButton id={row.id} title={row.title} />
+                    <DeleteContentButton
+                      id={row.id}
+                      title={row.title}
+                    />
                   </div>
                 </CardContent>
               </Card>

@@ -125,7 +125,7 @@ export async function createSponsorAction(formData: FormData) {
   }
 
   revalidateSponsorPaths();
-  redirect("/admin/sponsors");
+  redirect("/admin/sponsors?success=sponsor-created");
 }
 
 export async function updateSponsorAction(formData: FormData) {
@@ -152,7 +152,7 @@ export async function updateSponsorAction(formData: FormData) {
   revalidateSponsorPaths();
   revalidatePath(`/admin/sponsors/${id}/edit`);
 
-  redirect("/admin/sponsors");
+  redirect("/admin/sponsors?success=sponsor-updated");
 }
 
 export async function toggleSponsorActiveAction(formData: FormData) {
@@ -180,6 +180,11 @@ export async function toggleSponsorActiveAction(formData: FormData) {
 
   revalidateSponsorPaths();
   revalidatePath("/admin/sponsors");
+  redirect(
+  `/admin/sponsors?success=${
+    nextActive ? "sponsor-activated" : "sponsor-deactivated"
+  }`
+);
 }
 
 export async function deleteSponsorAction(formData: FormData) {
@@ -201,4 +206,5 @@ export async function deleteSponsorAction(formData: FormData) {
 
   revalidateSponsorPaths();
   revalidatePath("/admin/sponsors");
+  redirect("/admin/sponsors?success=sponsor-deleted");
 }
