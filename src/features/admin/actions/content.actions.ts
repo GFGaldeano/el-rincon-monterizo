@@ -244,3 +244,25 @@ export async function togglePublishContentAction(formData: FormData) {
   revalidatePath(`/contenido/${id}`);
   revalidatePath("/admin/content");
 }
+
+export async function deleteContentAction(formData: FormData) {
+  await requireAdminEmail();
+
+  const id = String(formData.get("id") ?? "").trim();
+
+  if (!id) {
+    throw new Error("Missing content id.");
+  }
+
+  const adminClient = createAdminClient();
+
+  const { error } = await adminClient.from("content").delete().eq("id", id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  revalidateContentPaths();
+  revalidatePath(`/contenido/${id}`);
+  revalidatePath("/admin/content");
+}

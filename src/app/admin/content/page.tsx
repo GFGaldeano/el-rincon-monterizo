@@ -9,6 +9,7 @@ import { TogglePublishButton } from "@/features/admin/components/content/ToggleP
 import { isAdminEmail } from "@/lib/admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { DeleteContentButton } from "@/features/admin/components/content/DeleteContentButton";
 
 type AdminContentRow = {
   id: string;
@@ -84,7 +85,7 @@ export default async function AdminContentPage({
   let query = adminClient
     .from("content")
     .select(
-      "id, title, slug, category, author_name, is_featured, is_published, display_order, created_at"
+      "id, title, slug, category, author_name, is_featured, is_published, display_order, created_at",
     )
     .order("display_order", { ascending: true })
     .order("created_at", { ascending: false });
@@ -126,7 +127,10 @@ export default async function AdminContentPage({
             </p>
           </div>
 
-          <Button asChild className="bg-amber-400 text-zinc-950 hover:bg-amber-300">
+          <Button
+            asChild
+            className="bg-amber-400 text-zinc-950 hover:bg-amber-300"
+          >
             <Link href="/admin/content/new">Nuevo contenido</Link>
           </Button>
         </div>
@@ -263,6 +267,8 @@ export default async function AdminContentPage({
                       id={row.id}
                       isPublished={row.is_published}
                     />
+
+                    <DeleteContentButton id={row.id} title={row.title} />
                   </div>
                 </CardContent>
               </Card>

@@ -181,3 +181,24 @@ export async function toggleSponsorActiveAction(formData: FormData) {
   revalidateSponsorPaths();
   revalidatePath("/admin/sponsors");
 }
+
+export async function deleteSponsorAction(formData: FormData) {
+  await requireAdminEmail();
+
+  const id = String(formData.get("id") ?? "").trim();
+
+  if (!id) {
+    throw new Error("Missing sponsor id.");
+  }
+
+  const adminClient = createAdminClient();
+
+  const { error } = await adminClient.from("sponsors").delete().eq("id", id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  revalidateSponsorPaths();
+  revalidatePath("/admin/sponsors");
+}

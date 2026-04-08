@@ -10,6 +10,7 @@ import { ToggleSponsorActiveButton } from "@/features/admin/components/sponsors/
 import { isAdminEmail } from "@/lib/admin";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { DeleteSponsorButton } from "@/features/admin/components/sponsors/DeleteSponsorButton";
 
 type AdminSponsorRow = {
   id: string;
@@ -321,19 +322,24 @@ export default async function AdminSponsorsPage({
                   </div>
 
                   <div className="flex flex-wrap gap-3">
-                    <Button asChild variant="outline">
-                      <Link href="/sponsors">Ver público</Link>
-                    </Button>
+  <Button asChild variant="outline">
+    <Link href="/sponsors">Ver público</Link>
+  </Button>
 
-                    <Button asChild variant="outline">
-                      <Link href={`/admin/sponsors/${row.id}/edit`}>Editar</Link>
-                    </Button>
+  <Button asChild variant="outline">
+    <Link href={`/admin/sponsors/${row.id}/edit`}>Editar</Link>
+  </Button>
 
-                    <ToggleSponsorActiveButton
-                      id={row.id}
-                      isActive={row.is_active}
-                    />
-                  </div>
+  <ToggleSponsorActiveButton
+    id={row.id}
+    isActive={row.is_active}
+  />
+
+  <DeleteSponsorButton
+    id={row.id}
+    name={row.name}
+  />
+</div>
                 </CardContent>
               </Card>
             ))}
