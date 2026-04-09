@@ -4,6 +4,7 @@ import { useActionState } from "react";
 
 import { togglePublishContentAction } from "@/features/admin/actions/content.actions";
 import { Button } from "@/components/ui/button";
+import { isNextRedirectError } from "@/lib/is-next-redirect-error";
 
 type TogglePublishButtonProps = {
   id: string;
@@ -24,6 +25,10 @@ export function TogglePublishButton({
         await togglePublishContentAction(formData);
         return { error: "" };
       } catch (error) {
+        if (isNextRedirectError(error)) {
+          throw error;
+        }
+
         return {
           error:
             error instanceof Error

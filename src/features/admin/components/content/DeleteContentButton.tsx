@@ -4,6 +4,7 @@ import { useActionState } from "react";
 
 import { toggleTrashContentAction } from "@/features/admin/actions/content.actions";
 import { Button } from "@/components/ui/button";
+import { isNextRedirectError } from "@/lib/is-next-redirect-error";
 
 type DeleteContentButtonProps = {
   id: string;
@@ -28,6 +29,10 @@ export function DeleteContentButton({
         await toggleTrashContentAction(formData);
         return { error: "" };
       } catch (error) {
+        if (isNextRedirectError(error)) {
+          throw error;
+        }
+
         return {
           error:
             error instanceof Error
@@ -56,9 +61,17 @@ export function DeleteContentButton({
       }}
     >
       <input type="hidden" name="id" value={id} />
-      <input type="hidden" name="nextDeleted" value={isDeleted ? "false" : "true"} />
+      <input
+        type="hidden"
+        name="nextDeleted"
+        value={isDeleted ? "false" : "true"}
+      />
 
-      <Button type="submit" variant={isDeleted ? "outline" : "destructive"} disabled={isPending}>
+      <Button
+        type="submit"
+        variant={isDeleted ? "outline" : "destructive"}
+        disabled={isPending}
+      >
         {isPending ? "Guardando..." : isDeleted ? "Restaurar" : "Mover a papelera"}
       </Button>
 
