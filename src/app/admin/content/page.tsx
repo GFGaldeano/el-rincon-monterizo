@@ -21,6 +21,7 @@ type AdminContentRow = {
   is_published: boolean;
   display_order: number;
   created_at: string;
+  deleted_at: string | null;
 };
 
 type AdminContentPageProps = {
@@ -28,9 +29,13 @@ type AdminContentPageProps = {
     q?: string;
     category?: string;
     status?: string;
+    trash?: string;
     success?: string;
+    page?: string;
   }>;
 };
+
+const PAGE_SIZE = 8;
 
 const categoryOptions = [
   { value: "all", label: "Todas" },
@@ -46,6 +51,12 @@ const statusOptions = [
   { value: "draft", label: "Borradores" },
 ];
 
+const trashOptions = [
+  { value: "active", label: "Activos" },
+  { value: "trashed", label: "Papelera" },
+  { value: "all", label: "Todos" },
+];
+
 function getSuccessMessage(success?: string) {
   switch (success) {
     case "content-created":
@@ -56,11 +67,32 @@ function getSuccessMessage(success?: string) {
       return "Contenido publicado correctamente.";
     case "content-unpublished":
       return "Contenido despublicado correctamente.";
-    case "content-deleted":
-      return "Contenido eliminado correctamente.";
+    case "content-trashed":
+      return "Contenido movido a la papelera.";
+    case "content-restored":
+      return "Contenido restaurado correctamente.";
     default:
       return null;
   }
+}
+
+function buildPageUrl(params: {
+  q: string;
+  category: string;
+  status: string;
+  trash: string;
+  page: number;
+}) {
+  const search = new URLSearchParams();
+
+  if (params.q) search.set("q", params.q);
+  if (params.category !== "all") search.set("category", params.category);
+  if (params.status !== "all") search.set("status", params.status);
+  if (params.trash !== "active") search.set("trash", params.trash);
+  if (params.page > 1) search.set("page", String(params.page));
+
+  const query = search.toString();
+  return query ? `/admin/content?${query}` : "/admin/content";
 }
 
 export default async function AdminContentPage({
@@ -85,10 +117,26 @@ export default async function AdminContentPage({
       ? resolvedSearchParams.status
       : "all";
 
+  const trash =
+    typeof resolvedSearchParams.trash === "string" &&
+    resolvedSearchParams.trash.length > 0
+      ? resolvedSearchParams.trash
+      : "active";
+
   const success =
     typeof resolvedSearchParams.success === "string"
       ? resolvedSearchParams.success
       : "";
+
+  const currentPageRaw =
+    typeof resolvedSearchParams.page === "string"
+      ? Number(resolvedSearchParams.page)
+      : 1;
+
+  const currentPage =
+    Number.isFinite(currentPageRaw) && currentPageRaw > 0
+      ? Math.floor(currentPageRaw)
+      : 1;
 
   const successMessage = getSuccessMessage(success);
 
@@ -110,7 +158,8 @@ export default async function AdminContentPage({
   let query = adminClient
     .from("content")
     .select(
-      "id, title, slug, category, author_name, is_featured, is_published, display_order, created_at"
+      "id, title, slug, category, author_name, is_featured, is_published, display_order, created_at, deleted_at",
+      { count: "exact" }
     )
     .order("display_order", { ascending: true })
     .order("created_at", { ascending: false });
@@ -131,10 +180,44 @@ export default async function AdminContentPage({
     query = query.eq("is_published", false);
   }
 
-  const { data, error } = await query;
+  if (trash === "active") {
+    query = query.is("deleted_at", null);
+  }
+
+  if (trash === "trashed") {
+    query = query.not("deleted_at", "is", null);
+  }
+
+  const from = (currentPage - 1) * PAGE_SIZE;
+  const to = from + PAGE_SIZE - 1;
+
+  const { data, error, count } = await query.range(from, to);
 
   const rows = (data ?? []) as AdminContentRow[];
-  const hasActiveFilters = Boolean(q) || category !== "all" || status !== "all";
+  const totalItems = count ?? 0;
+  const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+
+  const hasActiveFilters =
+    Boolean(q) ||
+    category !== "all" ||
+    status !== "all" ||
+    trash !== "active";
+
+  const prevPageUrl = buildPageUrl({
+    q,
+    category,
+    status,
+    trash,
+    page: currentPage - 1,
+  });
+
+  const nextPageUrl = buildPageUrl({
+    q,
+    category,
+    status,
+    trash,
+    page: currentPage + 1,
+  });
 
   return (
     <section className="py-16">
@@ -148,7 +231,7 @@ export default async function AdminContentPage({
               Gestión de contenidos
             </h1>
             <p className="mt-3 text-zinc-400">
-              Buscá, filtrá y administrá contenidos publicados o borradores.
+              Buscá, filtrá y administrá contenidos publicados, borradores o en papelera.
             </p>
           </div>
 
@@ -165,12 +248,9 @@ export default async function AdminContentPage({
 
         <Card className="mb-8 border-white/10 bg-zinc-900/70">
           <CardContent className="p-6">
-            <form className="grid gap-4 lg:grid-cols-[1.5fr_1fr_1fr_auto]">
+            <form className="grid gap-4 xl:grid-cols-[1.5fr_1fr_1fr_1fr_auto]">
               <div className="grid gap-2">
-                <label
-                  htmlFor="q"
-                  className="text-sm font-medium text-zinc-300"
-                >
+                <label htmlFor="q" className="text-sm font-medium text-zinc-300">
                   Buscar por título o slug
                 </label>
                 <input
@@ -183,10 +263,7 @@ export default async function AdminContentPage({
               </div>
 
               <div className="grid gap-2">
-                <label
-                  htmlFor="category"
-                  className="text-sm font-medium text-zinc-300"
-                >
+                <label htmlFor="category" className="text-sm font-medium text-zinc-300">
                   Categoría
                 </label>
                 <select
@@ -204,10 +281,7 @@ export default async function AdminContentPage({
               </div>
 
               <div className="grid gap-2">
-                <label
-                  htmlFor="status"
-                  className="text-sm font-medium text-zinc-300"
-                >
+                <label htmlFor="status" className="text-sm font-medium text-zinc-300">
                   Estado
                 </label>
                 <select
@@ -224,11 +298,26 @@ export default async function AdminContentPage({
                 </select>
               </div>
 
-              <div className="flex items-end gap-3">
-                <Button
-                  type="submit"
-                  className="bg-amber-400 text-zinc-950 hover:bg-amber-300"
+              <div className="grid gap-2">
+                <label htmlFor="trash" className="text-sm font-medium text-zinc-300">
+                  Papelera
+                </label>
+                <select
+                  id="trash"
+                  name="trash"
+                  defaultValue={trash}
+                  className="h-10 rounded-md border border-white/10 bg-zinc-950 px-3 text-white outline-none"
                 >
+                  {trashOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex items-end gap-3">
+                <Button type="submit" className="bg-amber-400 text-zinc-950 hover:bg-amber-300">
                   Aplicar
                 </Button>
 
@@ -249,67 +338,108 @@ export default async function AdminContentPage({
         ) : null}
 
         {!error ? (
-          <div className="mb-6 text-sm text-zinc-500">
-            Resultados encontrados: {rows.length}
+          <div className="mb-6 flex flex-col gap-2 text-sm text-zinc-500 md:flex-row md:items-center md:justify-between">
+            <span>
+              Resultados encontrados: {totalItems}
+            </span>
+            <span>
+              Página {currentPage} de {totalPages}
+            </span>
           </div>
         ) : null}
 
         {rows.length > 0 ? (
           <div className="grid gap-4">
-            {rows.map((row) => (
-              <Card key={row.id} className="border-white/10 bg-zinc-900/70">
-                <CardContent className="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between">
-                  <div>
-                    <h2 className="text-lg font-semibold text-white">
-                      {row.title}
-                    </h2>
-                    <p className="mt-1 text-sm text-zinc-500">
-                      {row.category} · {row.author_name} · {row.slug}
-                    </p>
+            {rows.map((row) => {
+              const isDeleted = Boolean(row.deleted_at);
 
-                    <div className="mt-3 flex flex-wrap gap-2 text-xs">
-                      <span className="rounded-full bg-white/5 px-3 py-1 text-zinc-300">
-                        Orden: {row.display_order}
-                      </span>
-                      <span className="rounded-full bg-white/5 px-3 py-1 text-zinc-300">
-                        {row.is_published ? "Publicado" : "Borrador"}
-                      </span>
-                      {row.is_featured ? (
-                        <span className="rounded-full bg-amber-400/10 px-3 py-1 text-amber-300">
-                          Destacado
+              return (
+                <Card key={row.id} className="border-white/10 bg-zinc-900/70">
+                  <CardContent className="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between">
+                    <div>
+                      <h2 className="text-lg font-semibold text-white">{row.title}</h2>
+                      <p className="mt-1 text-sm text-zinc-500">
+                        {row.category} · {row.author_name} · {row.slug}
+                      </p>
+
+                      <div className="mt-3 flex flex-wrap gap-2 text-xs">
+                        <span className="rounded-full bg-white/5 px-3 py-1 text-zinc-300">
+                          Orden: {row.display_order}
                         </span>
-                      ) : null}
+                        <span className="rounded-full bg-white/5 px-3 py-1 text-zinc-300">
+                          {row.is_published ? "Publicado" : "Borrador"}
+                        </span>
+                        {row.is_featured ? (
+                          <span className="rounded-full bg-amber-400/10 px-3 py-1 text-amber-300">
+                            Destacado
+                          </span>
+                        ) : null}
+                        {isDeleted ? (
+                          <span className="rounded-full bg-red-500/10 px-3 py-1 text-red-300">
+                            En papelera
+                          </span>
+                        ) : null}
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="flex flex-wrap gap-3">
-                    <Button asChild variant="outline">
-                      <Link href={`/contenido/${row.id}`}>Ver</Link>
-                    </Button>
+                    <div className="flex flex-wrap gap-3">
+                      {!isDeleted ? (
+                        <Button asChild variant="outline">
+                          <Link href={`/contenido/${row.id}`}>Ver</Link>
+                        </Button>
+                      ) : null}
 
-                    <Button asChild variant="outline">
-                      <Link href={`/admin/content/${row.id}/edit`}>Editar</Link>
-                    </Button>
+                      <Button asChild variant="outline">
+                        <Link href={`/admin/content/${row.id}/edit`}>Editar</Link>
+                      </Button>
 
-                    <TogglePublishButton
-                      id={row.id}
-                      isPublished={row.is_published}
-                    />
+                      {!isDeleted ? (
+                        <TogglePublishButton
+                          id={row.id}
+                          isPublished={row.is_published}
+                        />
+                      ) : null}
 
-                    <DeleteContentButton
-                      id={row.id}
-                      title={row.title}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                      <DeleteContentButton
+                        id={row.id}
+                        title={row.title}
+                        deletedAt={row.deleted_at}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         ) : (
           <div className="rounded-2xl border border-white/10 bg-zinc-900/60 p-6 text-zinc-400">
             No se encontraron contenidos con los filtros aplicados.
           </div>
         )}
+
+        {!error && totalPages > 1 ? (
+          <div className="mt-8 flex items-center justify-between gap-4">
+            {currentPage > 1 ? (
+              <Button asChild variant="outline">
+                <Link href={prevPageUrl}>Anterior</Link>
+              </Button>
+            ) : (
+              <Button variant="outline" disabled>
+                Anterior
+              </Button>
+            )}
+
+            {currentPage < totalPages ? (
+              <Button asChild variant="outline">
+                <Link href={nextPageUrl}>Siguiente</Link>
+              </Button>
+            ) : (
+              <Button variant="outline" disabled>
+                Siguiente
+              </Button>
+            )}
+          </div>
+        ) : null}
       </Container>
     </section>
   );

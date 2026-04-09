@@ -243,17 +243,19 @@ export async function togglePublishContentAction(formData: FormData) {
   revalidateContentPaths();
   revalidatePath(`/contenido/${id}`);
   revalidatePath("/admin/content");
+
   redirect(
-  `/admin/content?success=${
-    nextPublished ? "content-published" : "content-unpublished"
-  }`
-);
+    `/admin/content?success=${
+      nextPublished ? "content-published" : "content-unpublished"
+    }`
+  );
 }
 
-export async function deleteContentAction(formData: FormData) {
+export async function toggleTrashContentAction(formData: FormData) {
   await requireAdminEmail();
 
   const id = String(formData.get("id") ?? "").trim();
+  const nextDeleted = String(formData.get("nextDeleted") ?? "").trim() === "true";
 
   if (!id) {
     throw new Error("Missing content id.");
@@ -261,7 +263,20 @@ export async function deleteContentAction(formData: FormData) {
 
   const adminClient = createAdminClient();
 
-  const { error } = await adminClient.from("content").delete().eq("id", id);
+  const payload = nextDeleted
+    ? {
+        deleted_at: new Date().toISOString(),
+        is_published: false,
+        published_at: null,
+      }
+    : {
+        deleted_at: null,
+      };
+
+  const { error } = await adminClient
+    .from("content")
+    .update(payload)
+    .eq("id", id);
 
   if (error) {
     throw new Error(error.message);
@@ -270,5 +285,10 @@ export async function deleteContentAction(formData: FormData) {
   revalidateContentPaths();
   revalidatePath(`/contenido/${id}`);
   revalidatePath("/admin/content");
-  redirect("/admin/content?success=content-deleted");
+
+  redirect(
+    `/admin/content?success=${
+      nextDeleted ? "content-trashed" : "content-restored"
+    }`
+  );
 }

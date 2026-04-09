@@ -180,17 +180,19 @@ export async function toggleSponsorActiveAction(formData: FormData) {
 
   revalidateSponsorPaths();
   revalidatePath("/admin/sponsors");
+
   redirect(
-  `/admin/sponsors?success=${
-    nextActive ? "sponsor-activated" : "sponsor-deactivated"
-  }`
-);
+    `/admin/sponsors?success=${
+      nextActive ? "sponsor-activated" : "sponsor-deactivated"
+    }`
+  );
 }
 
-export async function deleteSponsorAction(formData: FormData) {
+export async function toggleTrashSponsorAction(formData: FormData) {
   await requireAdminEmail();
 
   const id = String(formData.get("id") ?? "").trim();
+  const nextDeleted = String(formData.get("nextDeleted") ?? "").trim() === "true";
 
   if (!id) {
     throw new Error("Missing sponsor id.");
@@ -198,7 +200,19 @@ export async function deleteSponsorAction(formData: FormData) {
 
   const adminClient = createAdminClient();
 
-  const { error } = await adminClient.from("sponsors").delete().eq("id", id);
+  const payload = nextDeleted
+    ? {
+        deleted_at: new Date().toISOString(),
+        is_active: false,
+      }
+    : {
+        deleted_at: null,
+      };
+
+  const { error } = await adminClient
+    .from("sponsors")
+    .update(payload)
+    .eq("id", id);
 
   if (error) {
     throw new Error(error.message);
@@ -206,5 +220,10 @@ export async function deleteSponsorAction(formData: FormData) {
 
   revalidateSponsorPaths();
   revalidatePath("/admin/sponsors");
-  redirect("/admin/sponsors?success=sponsor-deleted");
+
+  redirect(
+    `/admin/sponsors?success=${
+      nextDeleted ? "sponsor-trashed" : "sponsor-restored"
+    }`
+  );
 }

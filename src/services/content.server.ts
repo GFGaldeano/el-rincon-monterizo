@@ -1,10 +1,6 @@
 import "server-only";
 
-
-import type {
-  ContentCategory,
-  ContentItem,
-} from "@/features/content/types/content";
+import type { ContentCategory, ContentItem } from "@/features/content/types/content";
 import { createClient } from "@/lib/supabase/server";
 
 type ContentRecord = {
@@ -20,41 +16,92 @@ type ContentRecord = {
   format: string | null;
   duration_seconds: number | null;
   page_count: number | null;
+  video_provider: "youtube" | "mux" | "external" | null;
+  mux_playback_id: string | null;
   is_featured: boolean;
   is_published: boolean;
   published_at: string | null;
   display_order: number;
-  video_provider: "youtube" | "mux" | "external" | null;
-  mux_playback_id: string | null;
 };
 
 const fallbackImageUrl =
-  "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=1200&q=80";
+  "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=80";
 
-function formatDuration(durationSeconds: number | null): string | undefined {
-  if (!durationSeconds || durationSeconds <= 0) return undefined;
+function formatDuration(seconds: number | null) {
+  if (!seconds || seconds <= 0) return undefined;
 
-  const minutes = Math.ceil(durationSeconds / 60);
-  return `${minutes} min`;
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
+  if (minutes === 0) return `${remainingSeconds}s`;
+  if (remainingSeconds === 0) return `${minutes} min`;
+
+  return `${minutes} min ${remainingSeconds}s`;
 }
 
 function mapContentRecord(record: ContentRecord): ContentItem {
-return {
-  id: record.id,
-  title: record.title,
-  description: record.description,
-  category: record.category,
-  author: record.author_name,
-  imageUrl: record.cover_image_url ?? fallbackImageUrl,
-  featured: record.is_featured,
-  duration: formatDuration(record.duration_seconds),
-  format: record.format ?? undefined,
-  pages: record.page_count ?? undefined,
-  organization: record.organization_name ?? undefined,
-  contentUrl: record.content_url ?? undefined,
-  videoProvider: record.video_provider ?? undefined,
-  muxPlaybackId: record.mux_playback_id ?? undefined,
-};
+  return {
+    id: record.id,
+    title: record.title,
+    description: record.description,
+    category: record.category,
+    author: record.author_name,
+    imageUrl: record.cover_image_url ?? fallbackImageUrl,
+    featured: record.is_featured,
+    duration: formatDuration(record.duration_seconds),
+    format: record.format ?? undefined,
+    pages: record.page_count ?? undefined,
+    organization: record.organization_name ?? undefined,
+    contentUrl: record.content_url ?? undefined,
+    videoProvider: record.video_provider ?? undefined,
+    muxPlaybackId: record.mux_playback_id ?? undefined,
+  };
+}
+
+const contentSelect = `
+  id,
+  slug,
+  title,
+  description,
+  category,
+  author_name,
+  organization_name,
+  cover_image_url,
+  content_url,
+  format,
+  duration_seconds,
+  page_count,
+  video_provider,
+  mux_playback_id,
+  is_featured,
+  is_published,
+  published_at,
+  display_order
+`;
+
+export async function getFeaturedPublishedContent(limit = 3): Promise<{
+  data: ContentItem[];
+  error: string | null;
+}> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("content")
+    .select(contentSelect)
+    .is("deleted_at", null)
+    .eq("is_featured", true)
+    .eq("is_published", true)
+    .order("display_order", { ascending: true })
+    .limit(limit);
+
+  if (error) {
+    return { data: [], error: error.message };
+  }
+
+  return {
+    data: ((data ?? []) as ContentRecord[]).map(mapContentRecord),
+    error: null,
+  };
 }
 
 export async function getPublishedLibraryContent(): Promise<{
@@ -65,170 +112,14 @@ export async function getPublishedLibraryContent(): Promise<{
 
   const { data, error } = await supabase
     .from("content")
-    .select(
-      `
-        id,
-        slug,
-        title,
-        description,
-        category,
-        author_name,
-        organization_name,
-        cover_image_url,
-        content_url,
-        format,
-        duration_seconds,
-        page_count,
-        is_featured,
-        is_published,
-        published_at,
-        display_order,
-        video_provider,
-        mux_playback_id
-      `
-    )
+    .select(contentSelect)
+    .is("deleted_at", null)
     .in("category", ["biblioteca", "documento"])
     .eq("is_published", true)
     .order("display_order", { ascending: true });
 
   if (error) {
-    return {
-      data: [],
-      error: error.message,
-    };
-  }
-
-  return {
-    data: ((data ?? []) as ContentRecord[]).map(mapContentRecord),
-    error: null,
-  };
-}
-
-export async function getPublishedContentById(
-  id: string
-): Promise<ContentItem | null> {
-  const supabase = await createClient();
-
-  const { data, error } = await supabase
-    .from("content")
-    .select(
-      `
-        id,
-        slug,
-        title,
-        description,
-        category,
-        author_name,
-        organization_name,
-        cover_image_url,
-        content_url,
-        format,
-        duration_seconds,
-        page_count,
-        is_featured,
-        is_published,
-        published_at,
-        display_order,
-        video_provider,
-        mux_playback_id
-      `
-    )
-    .eq("id", id)
-    .eq("is_published", true)
-    .maybeSingle();
-
-  if (error || !data) {
-    return null;
-  }
-
-  return mapContentRecord(data as ContentRecord);
-}
-
-export async function getRelatedPublishedContent(
-  category: ContentCategory,
-  excludeId: string,
-  limit = 3
-): Promise<ContentItem[]> {
-  const supabase = await createClient();
-
-  const { data, error } = await supabase
-    .from("content")
-    .select(
-      `
-        id,
-        slug,
-        title,
-        description,
-        category,
-        author_name,
-        organization_name,
-        cover_image_url,
-        content_url,
-        format,
-        duration_seconds,
-        page_count,
-        is_featured,
-        is_published,
-        published_at,
-        display_order,
-        video_provider,
-        mux_playback_id
-      `
-    )
-    .eq("category", category)
-    .eq("is_published", true)
-    .neq("id", excludeId)
-    .order("display_order", { ascending: true })
-    .limit(limit);
-
-  if (error) {
-    return [];
-  }
-
-  return ((data ?? []) as ContentRecord[]).map(mapContentRecord);
-}
-
-
-export async function getFeaturedPublishedContent(limit = 3): Promise<{
-  data: ContentItem[];
-  error: string | null;
-}> {
-  const supabase = await createClient();
-
-  const { data, error } = await supabase
-    .from("content")
-    .select(
-      `
-        id,
-        slug,
-        title,
-        description,
-        category,
-        author_name,
-        organization_name,
-        cover_image_url,
-        content_url,
-        format,
-        duration_seconds,
-        page_count,
-        is_featured,
-        is_published,
-        published_at,
-        display_order,
-        video_provider,
-        mux_playback_id
-      `
-    )
-    .eq("is_published", true)
-    .eq("is_featured", true)
-    .order("display_order", { ascending: true })
-    .limit(limit);
-
-  if (error) {
-    return {
-      data: [],
-      error: error.message,
-    };
+    return { data: [], error: error.message };
   }
 
   return {
@@ -245,37 +136,14 @@ export async function getPublishedVideoContent(): Promise<{
 
   const { data, error } = await supabase
     .from("content")
-    .select(
-      `
-        id,
-        slug,
-        title,
-        description,
-        category,
-        author_name,
-        organization_name,
-        cover_image_url,
-        content_url,
-        format,
-        duration_seconds,
-        page_count,
-        is_featured,
-        is_published,
-        published_at,
-        display_order,
-        video_provider,
-        mux_playback_id
-      `
-    )
+    .select(contentSelect)
+    .is("deleted_at", null)
     .eq("category", "video")
     .eq("is_published", true)
     .order("display_order", { ascending: true });
 
   if (error) {
-    return {
-      data: [],
-      error: error.message,
-    };
+    return { data: [], error: error.message };
   }
 
   return {
@@ -292,37 +160,72 @@ export async function getPublishedCultureContent(): Promise<{
 
   const { data, error } = await supabase
     .from("content")
-    .select(
-      `
-        id,
-        slug,
-        title,
-        description,
-        category,
-        author_name,
-        organization_name,
-        cover_image_url,
-        content_url,
-        format,
-        duration_seconds,
-        page_count,
-        is_featured,
-        is_published,
-        published_at,
-        display_order,
-        video_provider,
-        mux_playback_id
-      `
-    )
+    .select(contentSelect)
+    .is("deleted_at", null)
     .eq("category", "cultura")
     .eq("is_published", true)
     .order("display_order", { ascending: true });
 
   if (error) {
-    return {
-      data: [],
-      error: error.message,
-    };
+    return { data: [], error: error.message };
+  }
+
+  return {
+    data: ((data ?? []) as ContentRecord[]).map(mapContentRecord),
+    error: null,
+  };
+}
+
+export async function getPublishedContentById(id: string): Promise<{
+  data: ContentItem | null;
+  error: string | null;
+}> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("content")
+    .select(contentSelect)
+    .is("deleted_at", null)
+    .eq("id", id)
+    .eq("is_published", true)
+    .maybeSingle();
+
+  if (error) {
+    return { data: null, error: error.message };
+  }
+
+  if (!data) {
+    return { data: null, error: null };
+  }
+
+  return {
+    data: mapContentRecord(data as ContentRecord),
+    error: null,
+  };
+}
+
+export async function getRelatedPublishedContent(
+  category: ContentCategory,
+  excludeId: string,
+  limit = 3
+): Promise<{
+  data: ContentItem[];
+  error: string | null;
+}> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("content")
+    .select(contentSelect)
+    .is("deleted_at", null)
+    .eq("category", category)
+    .eq("is_published", true)
+    .neq("id", excludeId)
+    .order("display_order", { ascending: true })
+    .limit(limit);
+
+  if (error) {
+    return { data: [], error: error.message };
   }
 
   return {

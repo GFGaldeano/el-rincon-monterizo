@@ -37,6 +37,23 @@ function mapSponsorRecord(record: SponsorRecord): SponsorItem {
   };
 }
 
+const sponsorSelect = `
+  id,
+  slug,
+  name,
+  description,
+  business_category,
+  city,
+  website_url,
+  logo_url,
+  level,
+  is_featured,
+  is_active,
+  display_order,
+  start_date,
+  end_date
+`;
+
 export async function getActiveSponsors(): Promise<{
   data: SponsorItem[];
   error: string | null;
@@ -45,24 +62,8 @@ export async function getActiveSponsors(): Promise<{
 
   const { data, error } = await supabase
     .from("sponsors")
-    .select(
-      `
-        id,
-        slug,
-        name,
-        description,
-        business_category,
-        city,
-        website_url,
-        logo_url,
-        level,
-        is_featured,
-        is_active,
-        display_order,
-        start_date,
-        end_date
-      `
-    )
+    .select(sponsorSelect)
+    .is("deleted_at", null)
     .eq("is_active", true)
     .order("display_order", { ascending: true });
 
@@ -87,24 +88,8 @@ export async function getFeaturedActiveSponsors(limit = 3): Promise<{
 
   const { data, error } = await supabase
     .from("sponsors")
-    .select(
-      `
-        id,
-        slug,
-        name,
-        description,
-        business_category,
-        city,
-        website_url,
-        logo_url,
-        level,
-        is_featured,
-        is_active,
-        display_order,
-        start_date,
-        end_date
-      `
-    )
+    .select(sponsorSelect)
+    .is("deleted_at", null)
     .eq("is_active", true)
     .eq("is_featured", true)
     .order("display_order", { ascending: true })
